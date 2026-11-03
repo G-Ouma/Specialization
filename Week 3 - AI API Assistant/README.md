@@ -8,7 +8,7 @@ This week explores using a generative AI API from Python to build a question-and
 
 ### [Matatu Assistant](Matatu%20Assistant/README.md)
 
-A command-line prototype for a fictional Thika matatu SACCO. It uses Gemini to interpret member questions and answer from sample information supplied in a system prompt.
+A command-line prototype for a Thika matatu SACCO. It uses Gemini to interpret member questions and answer from sample information supplied in a system prompt.
 
 ## Shared setup
 
