@@ -1,0 +1,13 @@
+# Python environments
+venv/
+.venv/
+
+# Secrets
+.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Local search history
+travel_history.json
