@@ -1,60 +1,80 @@
 # Python & AI/ML Specialization
 
-This repository documents my journey through Python programming, APIs, automation, and Artificial Intelligence/Machine Learning (AI/ML).
+This repository documents my progression through Python programming, APIs, automation, and Artificial Intelligence/Machine Learning (AI/ML).
 
-My goal is to build practical projects that strengthen my programming skills and provide a foundation for developing real-world AI/ML solutions.
+The focus is on learning by building practical mini-projects, understanding the code, and improving projects incrementally.
 
-## Projects
-
-### Week 1 — APIs
-
-**Focus:** Working with APIs and handling external data using Python.
-
-Projects:
-- `day1_api.py` — Initial API practice.
-- `day2_weather.py` — Weather API integration.
-- `day3_travel_info.py` — Travel weather tool combining weather and country information, with JSON search-history storage.
-- `test.py` — Additional testing and practice.
-
-**Skills practiced:**
-- Making HTTP requests with `requests`.
-- Working with API responses and JSON.
-- Managing API credentials with environment variables and `python-dotenv`.
-- Handling HTTP errors, timeouts, and network exceptions.
-- Saving and retrieving structured data using JSON files.
-- Using Git and GitHub for version control.
-
-## Tech Stack
-
-- Python
-- REST APIs
-- Requests
-- JSON
-- python-dotenv
-- Git and GitHub
-
-## Repository Structure
+## Repository structure
 
 ```text
 Specialization/
 ├── README.md
+├── requirements.txt
+├── .env.example
 ├── .gitignore
 ├── Week 1 - APIs/
-│   ├── day1_api.py
-│   ├── day2_weather.py
-│   ├── day3_travel_info.py
-│   └── test.py
-└── Future weekly projects/
+│   ├── README.md
+│   ├── 01 - API Basics/
+│   ├── 02 - Weather API/
+│   ├── 03 - Travel Information API/
+│   └── 04 - Browser Country Lookup/
+└── Week 3 - AI API Assistant/
+    ├── README.md
+    └── Matatu Assistant/
 ```
 
-## Progress
+Each week has an overview README. Each mini-project has its own README describing its purpose, setup, usage, and learning outcomes.
+
+## Shared Python environment
+
+All projects use one virtual environment at the repository root. Do not create a separate environment inside each week or mini-project.
+
+### Windows PowerShell
+
+From the repository root:
+
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+```
+
+If the root `venv` already exists, activate it rather than recreating it.
+
+### macOS/Linux
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+## API credentials
+
+1. Copy `.env.example` to a file named `.env` in the repository root.
+2. Add your own API keys to `.env`.
+3. Keep `.env` private. It is excluded from Git.
+
+The current examples use these environment variables where applicable:
+
+- `OPENWEATHER_API_KEY`
+- `REST_COUNTRIES_API_KEY`
+- `GEMINI_API_KEY`
+
+Never commit real API keys or paste them into source files.
+
+## Managing dependencies
+
+The root `requirements.txt` is the single dependency list for the specialization.
+
+When a project needs a new external package, install it in the activated shared environment and add its package name (and, when appropriate, a version constraint) to the root `requirements.txt`. Python standard-library modules such as `os`, `json`, and `datetime` do not need to be installed.
+
+## Learning progress
 
 - [x] Week 1 — APIs and external data
 - [ ] Week 2 — To be added
-- [ ] Week 3 — To be added
+- [x] Week 3 — AI API assistant prototype
 
-## Learning Approach
+## Learning approach
 
-I focus on building practical projects, understanding the code behind them, improving them incrementally, and documenting what I learn.
-
-This repository will evolve as I progress toward more advanced Python and AI/ML engineering projects.
+I aim to build a small working project for each important concept, document what it does, test it, and improve it over time. The repository will grow as I progress toward practical AI/ML engineering work.
