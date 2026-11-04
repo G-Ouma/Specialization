@@ -4,6 +4,8 @@ venv/
 
 # Secrets
 .env
+client_secret.json
+token.json
 
 # Python cache
 __pycache__/

@@ -2,3 +2,5 @@ google-genai
 python-dotenv
 requests
 fastapi
+gspread
+google-auth-oauthlib
