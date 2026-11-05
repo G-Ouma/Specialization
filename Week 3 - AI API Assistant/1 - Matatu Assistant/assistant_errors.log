@@ -1,0 +1,396 @@
+2026-11-04 10:58:07,391 - ERROR - Gemini API request failed.
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\Week 3 - AI API Assistant\Matatu Assistant\main.py", line 68, in answer_question
+    response = client.models.generate_content(
+        model=MODEL,
+    ...<4 lines>...
+        ),
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6370, in generate_content
+    response = self._generate_content_with_continuation(
+        model=model, contents=contents, config=parsed_config_to_call
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6211, in _generate_content_with_continuation
+    response = self._generate_content(
+        model=model, contents=contents, config=call_config
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 4750, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 2073, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1849, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1826, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 187, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 216, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-11-04 11:01:38,225 - ERROR - Gemini API request failed.
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\Week 3 - AI API Assistant\Matatu Assistant\main.py", line 68, in answer_question
+    response = client.models.generate_content(
+        model=MODEL,
+    ...<4 lines>...
+        ),
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6370, in generate_content
+    response = self._generate_content_with_continuation(
+        model=model, contents=contents, config=parsed_config_to_call
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6211, in _generate_content_with_continuation
+    response = self._generate_content(
+        model=model, contents=contents, config=call_config
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 4750, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 2073, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1849, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1826, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 187, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 216, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-11-04 11:03:29,909 - ERROR - Gemini API request failed.
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\Week 3 - AI API Assistant\Matatu Assistant\main.py", line 68, in answer_question
+    response = client.models.generate_content(
+        model=MODEL,
+    ...<4 lines>...
+        ),
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6370, in generate_content
+    response = self._generate_content_with_continuation(
+        model=model, contents=contents, config=parsed_config_to_call
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6211, in _generate_content_with_continuation
+    response = self._generate_content(
+        model=model, contents=contents, config=call_config
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 4750, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 2073, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1849, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1826, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 187, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 216, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-11-04 11:06:14,006 - ERROR - Gemini API request failed.
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\Week 3 - AI API Assistant\Matatu Assistant\main.py", line 68, in answer_question
+    response = client.models.generate_content(
+        model=MODEL,
+    ...<4 lines>...
+        ),
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6370, in generate_content
+    response = self._generate_content_with_continuation(
+        model=model, contents=contents, config=parsed_config_to_call
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6211, in _generate_content_with_continuation
+    response = self._generate_content(
+        model=model, contents=contents, config=call_config
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 4750, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 2073, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1849, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1826, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 187, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 216, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'API key not valid. Please pass a valid API key.', 'status': 'INVALID_ARGUMENT', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'API_KEY_INVALID', 'domain': 'googleapis.com', 'metadata': {'service': 'generativelanguage.googleapis.com'}}, {'@type': 'type.googleapis.com/google.rpc.LocalizedMessage', 'locale': 'en-US', 'message': 'API key not valid. Please pass a valid API key.'}]}}
+2026-11-04 11:19:26,426 - ERROR - Gemini API request failed.
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\Week 3 - AI API Assistant\Matatu Assistant\main.py", line 68, in answer_question
+    response = client.models.generate_content(
+        model=MODEL,
+    ...<4 lines>...
+        ),
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6370, in generate_content
+    response = self._generate_content_with_continuation(
+        model=model, contents=contents, config=parsed_config_to_call
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6211, in _generate_content_with_continuation
+    response = self._generate_content(
+        model=model, contents=contents, config=call_config
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 4750, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 2073, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1849, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1826, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 187, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 216, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).', 'status': 'NOT_FOUND'}}
+2026-11-04 11:22:19,127 - ERROR - Gemini API request failed.
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\Week 3 - AI API Assistant\Matatu Assistant\main.py", line 68, in answer_question
+    response = client.models.generate_content(
+        model=MODEL,
+    ...<4 lines>...
+        ),
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6370, in generate_content
+    response = self._generate_content_with_continuation(
+        model=model, contents=contents, config=parsed_config_to_call
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 6211, in _generate_content_with_continuation
+    response = self._generate_content(
+        model=model, contents=contents, config=call_config
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\models.py", line 4750, in _generate_content
+    response = self._api_client.request(
+        'post', path, request_dict, http_options
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 2073, in request
+    response = self._request(http_request, http_options, stream=False)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1849, in _request
+    return self._retry(self._request_once, http_request, stream)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 470, in __call__
+    do = self.iter(retry_state=retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 371, in iter
+    result = action(retry_state)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 413, in exc_check
+    raise retry_exc.reraise()
+          ~~~~~~~~~~~~~~~~~^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 184, in reraise
+    raise self.last_attempt.result()
+          ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 443, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\eddou\AppData\Local\Python\pythoncore-3.14-64\Lib\concurrent\futures\_base.py", line 395, in __get_result
+    raise self._exception
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\tenacity\__init__.py", line 473, in __call__
+    result = fn(*args, **kwargs)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_api_client.py", line 1826, in _request_once
+    errors.APIError.raise_for_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 187, in raise_for_response
+    cls.raise_error(response.status_code, response_json, response)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\errors.py", line 216, in raise_error
+    raise ClientError(status_code, response_json, response)
+google.genai.errors.ClientError: 404 NOT_FOUND. {'error': {'code': 404, 'message': 'This model models/gemini-2.5-flash is no longer available to new users. Please update your code to use models/gemini-3.8-flash for the latest features and improvements. We recommend you to use the Interactions API (https://ai.google.dev/gemini-api/docs/get-started).', 'status': 'NOT_FOUND'}}
+2026-11-04 11:45:26,509 - ERROR - Unexpected error occurred.
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\interactions.py", line 646, in create
+    return _speakeasy_parse_response(http_res)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\interactions.py", line 577, in _speakeasy_parse_response
+    raise errors.CreateInteractionServerError(
+        response_data, http_res, http_res_text
+    )
+google.genai._gaos.errors.createinteraction.CreateInteractionServerError: gemini-3.8-flash is currently experiencing high demand, spikes in demand are usually temporary. Please try again later.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\Week 3 - AI API Assistant\Matatu Assistant\main.py", line 67, in answer_question
+    response = client.interactions.create(
+        model=MODEL,
+        input=question,
+        system_instruction=SYSTEM_PROMPT
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\google_genai.py", line 376, in create
+    response = send_once()
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\google_genai.py", line 431, in _send_create_once
+    return wrap_sdk_call(
+        super().create,
+        **cast(Any, req_body),
+        **call_kwargs,
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\lib\compat_errors.py", line 369, in wrap_sdk_call
+    return fn(*args, **kwargs)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\interactions.py", line 648, in create
+    response_helpers.raise_parse_error(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.sdk_configuration.__dict__["_hooks"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        parse_exc_,
+        ^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\utils\response_helpers.py", line 94, in raise_parse_error
+    raise parse_error from exc
+google.genai._gaos.lib.compat_errors.InternalServerError: Error code: 503 - {'error': {'message': 'gemini-3.8-flash is currently experiencing high demand, spikes in demand are usually temporary. Please try again later.', 'code': 'service_unavailable'}}
+2026-11-04 11:51:18,414 - ERROR - Unexpected error occurred.
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\interactions.py", line 646, in create
+    return _speakeasy_parse_response(http_res)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\interactions.py", line 577, in _speakeasy_parse_response
+    raise errors.CreateInteractionServerError(
+        response_data, http_res, http_res_text
+    )
+google.genai._gaos.errors.createinteraction.CreateInteractionServerError: gemini-3.8-flash is currently experiencing high demand, spikes in demand are usually temporary. Please try again later.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\Week 3 - AI API Assistant\Matatu Assistant\main.py", line 67, in answer_question
+    response = client.interactions.create(
+        model=MODEL,
+        input=question,
+        system_instruction=SYSTEM_PROMPT
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\google_genai.py", line 376, in create
+    response = send_once()
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\google_genai.py", line 431, in _send_create_once
+    return wrap_sdk_call(
+        super().create,
+        **cast(Any, req_body),
+        **call_kwargs,
+    )
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\lib\compat_errors.py", line 369, in wrap_sdk_call
+    return fn(*args, **kwargs)
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\interactions.py", line 648, in create
+    response_helpers.raise_parse_error(
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        self.sdk_configuration.__dict__["_hooks"],
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        parse_exc_,
+        ^^^^^^^^^^^
+    )
+    ^
+  File "C:\Projects\Python\100 Days\Specialization\venv\Lib\site-packages\google\genai\_gaos\utils\response_helpers.py", line 94, in raise_parse_error
+    raise parse_error from exc
+google.genai._gaos.lib.compat_errors.InternalServerError: Error code: 503 - {'error': {'message': 'gemini-3.8-flash is currently experiencing high demand, spikes in demand are usually temporary. Please try again later.', 'code': 'service_unavailable'}}
+2026-11-04 11:56:16,618 - ERROR - Unexpected error occurred.
+Traceback (most recent call last):
+  File "C:\Projects\Python\100 Days\Specialization\Week 3 - AI API Assistant\Matatu Assistant\main.py", line 70, in answer_question
+    config=types.GenerateContentConfig(
+           ^^^^^
+NameError: name 'types' is not defined. Did you mean: 'type'? Or did you forget to import 'types'?
