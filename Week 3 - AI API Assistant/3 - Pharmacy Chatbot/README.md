@@ -1,4 +1,4 @@
-# Kisumu Pharmacy Chatbot
+# Pharmacy Chatbot
 
 A Python command-line chatbot designed to help staff at Kisumu Pharmacy in Kisumu, Kenya, respond to common customer enquiries consistently.
 
@@ -56,7 +56,7 @@ Pharmacy Chatbot/
 ### 1. Clone the repository
 
 ```bash
-git clone <git@github.com:G-Ouma/Specialization.git>
+git clone <git@github.com:G-Ouma/Specialization.gitx>
 ```
 
 Navigate to the project directory:
