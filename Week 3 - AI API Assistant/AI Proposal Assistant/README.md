@@ -1,0 +1,243 @@
+# AI Proposal Assistant
+
+**Version:** 1.0.0  
+**Status:** Initial Release
+
+## Overview
+
+AI Proposal Assistant is a web-based tool that helps freelancers analyse client project briefs and generate clear, structured, and professional project proposals.
+
+The application uses Google's Gemini API to understand client requirements, identify missing information, estimate project effort, and generate proposals. Python handles pricing calculations using a configurable freelancer pricing profile to ensure that commercial figures are consistent and are not invented by the AI.
+
+## Features
+
+### 1. Client Brief Analysis
+- Identifies the client's main problem.
+- Extracts the expected deliverables.
+- Identifies requested deadlines.
+- Highlights unclear requirements and potential red flags.
+- Estimates the working effort required and indicates the confidence level.
+
+### 2. Automated Proposal Generation
+Generates proposals using six structured sections:
+
+1. **Opening** – Addresses the client's problem.
+2. **Understanding** – Demonstrates an understanding of the requirements.
+3. **Approach** – Explains how the work will be carried out.
+4. **Deliverables** – Lists the expected outputs.
+5. **Price and Timeline** – Provides calculated commercial terms where sufficient information is available.
+6. **Call to Action** – Suggests a clear next step.
+
+Proposals are limited to 200 words to encourage concise and relevant communication.
+
+### 3. Configurable Pricing
+Pricing is calculated in Python using an editable freelancer pricing profile.
+
+The profile supports:
+- Currency
+- Daily rate
+- Minimum project fee
+- Working hours per day
+- Payment terms
+- Delivery buffer multiplier
+
+The application calculates the proposed project fee and delivery duration from the estimated working effort.
+
+If the project scope is too unclear to support a reliable estimate, the application avoids providing a firm quotation or delivery commitment.
+
+## Technology Stack
+
+**Backend**
+- Python
+- FastAPI
+- Google Gemini API
+- Pydantic
+
+**Frontend**
+- HTML
+- CSS
+- JavaScript
+
+**Other**
+- JSON for pricing configuration
+- python-dotenv for environment variable management
+
+## Project Structure
+
+```text
+AI Proposal Assistant/
+│
+├── backend/
+│   ├── main.py
+│   ├── brief_analyzer.py
+│   ├── proposal_generator.py
+│   ├── proposal_reviewer.py
+│   ├── prompts.py
+│   ├── pricing.py
+│   ├── pricing_profile.json
+│   ├── testBrief.py
+│   ├── test_proposal.py
+│   ├── test_pricing.py
+│   └── test_pricing_integration.py
+│
+├── frontend/
+│   ├── index.html
+│   ├── style.css
+│   └── script.js
+│
+├── .env.example
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+## Setup and Installation
+
+### 1. Clone the repository
+
+```bash
+git clone git clone https://github.com/G-Ouma/Specialization.git
+```
+
+Navigate into the project directory:
+
+```bash
+cd "AI Proposal Assistant"
+```
+
+### 2. Set up the environment
+
+Install the required dependencies in your Python environment:
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Configure the Gemini API key
+
+The application requires a Gemini API key.
+
+Create or update the `.env` file in the parent `Specialization` directory:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+The application loads this shared environment file, so it does not need a separate `.env` file inside the project directory.
+
+### 4. Configure the pricing profile
+
+Edit:
+
+```text
+backend/pricing_profile.json
+```
+
+Example configuration:
+
+```json
+{
+    "currency": "KES",
+    "daily_rate": 3000,
+    "minimum_project_fee": 7500,
+    "working_hours_per_day": 8,
+    "payment_terms": "50% upfront, 50% on completion",
+    "delivery_buffer_multiplier": 1.5
+}
+```
+
+Adjust these values to match your own pricing structure.
+
+## Running the Application
+
+### 1. Start the backend
+
+From the project root:
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+The backend will run at:
+
+```text
+http://127.0.0.1:8000
+```
+
+API documentation is available at:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### 2. Start the frontend
+
+Open another terminal and navigate to the frontend directory:
+
+```bash
+cd frontend
+```
+
+Start the local server:
+
+```bash
+python -m http.server 5500
+```
+
+Open the application in your browser:
+
+```text
+http://localhost:5500
+```
+
+## API
+
+The application currently exposes the following main endpoint:
+
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | `/process` | Processes a client brief and generates a proposal. |
+
+The request supports different application modes. The proposal generation workflow is implemented in version 1.0.
+
+## Design Principles
+
+The application follows several important principles:
+
+- **Accuracy over creativity:** AI-generated content should reflect the actual client brief.
+- **No fabricated experience:** The application should not invent a freelancer's qualifications or past projects.
+- **Deterministic pricing:** Commercial figures are calculated using Python rather than generated by Gemini.
+- **Scope awareness:** Unclear requirements should be identified before making firm commitments.
+- **Conciseness:** Proposals should communicate value without unnecessary wording.
+- **Client-focused writing:** Proposals should address the client's problem rather than rely on generic introductions.
+
+## Current Limitations
+
+- Proposal review functionality is not yet implemented.
+- Effort estimates depend on the AI's interpretation of the supplied brief.
+- Delivery estimates use a configurable buffer and do not yet account for an actual work calendar or freelancer availability.
+- The pricing profile currently uses a single default configuration, with further customization planned.
+
+## Planned Improvements
+
+- Implement proposal review with focused feedback on strengths, weaknesses, and opening sentences.
+- Improve pricing customization and project-specific overrides.
+- Add further testing across different project categories.
+- Improve handling of ambiguous requirements and complex project scopes.
+
+## Version History
+
+### Version 1.0.0 – Initial Release
+
+- Implemented client brief analysis.
+- Added project effort estimation.
+- Integrated configurable, Python-based pricing calculations.
+- Added delivery buffer calculations.
+- Implemented structured proposal generation.
+- Created a web interface for submitting briefs and viewing results.
+
+---
+
+**Author:** Gerald Ouma  
+**Project:** AI Proposal Assistant  
+**Version:** 1.0.0

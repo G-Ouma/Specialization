@@ -1,0 +1,9 @@
+
+{
+    "currency": "KES",
+    "daily_rate": 3000,
+    "minimum_project_fee": 7500,
+    "working_hours_per_day": 8,
+    "payment_terms": "50% upfront, 50% on completion",
+    "delivery_buffer_multiplier": 1.5
+}

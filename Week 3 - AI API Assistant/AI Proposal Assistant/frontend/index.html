@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Proposal Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>AI Proposal Assistant</h1>
+        <p>Understand briefs. Write better proposals. Win more projects.</p>
+    </header>
+
+    <main>
+        <section class="container">
+
+            <h2>What would you like to do?</h2>
+
+            <div class="mode-buttons">
+                <button id="generateBtn" class="mode-btn active">
+                    Generate Proposal
+                </button>
+
+                <button id="reviewBtn" class="mode-btn">
+                    Review Proposal
+                </button>
+            </div>
+
+            <div class="input-section">
+                <label id="inputLabel" for="userInput">
+                    Paste your client brief
+                </label>
+
+                <textarea
+                    id="userInput"
+                    placeholder="Paste the client brief here..."
+                ></textarea>
+
+                <button id="submitBtn">Generate Proposal</button>
+            </div>
+
+            <section id="resultSection" class="result-section hidden">
+                <h2>Results</h2>
+                <div id="result"></div>
+            </section>
+
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
