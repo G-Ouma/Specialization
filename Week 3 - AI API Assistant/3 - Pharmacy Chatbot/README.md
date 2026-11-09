@@ -1,142 +1,126 @@
 # Pharmacy Chatbot
 
-A Python command-line chatbot designed to help staff at Kisumu Pharmacy in Kisumu, Kenya, respond to common customer enquiries consistently.
+## Overview
 
-The chatbot uses Google's Gemini API to answer questions about pharmacy services, operating hours, prescriptions and general customer enquiries.
+Pharmacy Chatbot is a Python command-line prototype that uses Google's Gemini API to answer common customer enquiries using pharmacy information supplied in a system instruction.
+
+The example is configured for a pharmacy in Kisumu, Kenya. It is an information assistant, not a live pharmacy management system and not a substitute for a qualified pharmacist.
 
 ## Features
 
-- **Pharmacy information:** Provides operating hours and available services.
-- **Prescription enquiries:** Explains prescription processing and repeat prescription requirements.
-- **Conversation memory:** Maintains context throughout an active conversation, allowing users to ask follow-up questions without repeating themselves.
-- **Knowledge boundaries:** Avoids inventing medicine availability, prices or unsupported services.
-- **Error handling:** Handles API failures and provides user-friendly error messages.
+- Answers questions about configured operating hours and services.
+- Responds to common prescription-processing and repeat-prescription questions.
+- Maintains conversation context during the current application session, so users can ask follow-up questions.
+- Avoids claiming access to live medicine stock or an official price list.
+- Provides user-facing messages when the Gemini service is unavailable or usage limits are reached.
 
-## Pharmacy Information
+## Information available to the assistant
 
-**Operating hours**
+The system instruction currently includes:
 
-| Day | Hours |
-|---|---|
-| Monday – Saturday | 8:00 AM – 8:00 PM |
-| Sunday | 10:00 AM – 4:00 PM |
+- Operating hours for Monday to Saturday and Sunday.
+- A configured list of pharmacy services.
+- General guidance about prescription processing.
+- General information about repeat-prescription requirements.
+- Instructions to refer uncertain medical or medication questions to pharmacy staff.
 
-**Services**
+The stated prescription processing time is an estimate only. The assistant is instructed not to guarantee a completion time.
 
-1. Prescription dispensing.
-2. Repeat prescription processing.
-3. Over-the-counter medication sales.
-4. Prescription review and verification.
-5. Blood pressure checks.
-6. Blood glucose testing.
-7. Medication counselling.
-8. General health and wellness products.
+**Important:** Confirm that the pharmacy details and service information are accurate and authorized before using this prototype in a real pharmacy. The assistant does not connect to pharmacy records, inventory, pricing, or patient systems.
 
-## Technologies Used
+## How conversation memory works
+
+The application creates a Gemini chat session when it starts and sends each user message through that session. This allows Gemini to use earlier messages as context during the running session.
+
+Conversation history is not saved by this application for use after it closes.
+
+## Technology
 
 - Python
-- Google Gemini API
-- Google Gen AI SDK
-- python-dotenv
+- Google Gemini API through the Google Gen AI SDK
+- `python-dotenv`
 
-## Project Structure
+## Project files
 
 ```text
-Pharmacy Chatbot/
-│
+3 - Pharmacy Chatbot/
 ├── main.py
-├── .env
-├── .env.example
-├── requirements.txt
 └── README.md
 ```
 
-## Installation and Setup
+The project uses the shared virtual environment, root `requirements.txt`, and root `.env` file in the `Specialization` repository. It does not require a separate project-level environment or requirements file.
 
-### 1. Clone the repository
+## Setup
 
-```bash
-git clone <git@github.com:G-Ouma/Specialization.gitx>
+### 1. Prepare the shared environment
+
+From the root of the `Specialization` repository, activate the shared virtual environment and install the root dependencies if you have not already done so.
+
+Windows PowerShell:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
 ```
 
-Navigate to the project directory:
+See the [main repository README](../../../README.md) for the shared setup instructions.
 
-```bash
-cd "Week 3 - AI API Assistant/Pharmacy Chatbot"
-```
+### 2. Configure Gemini
 
-### 2. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Configure environment variables
-
-Create a `.env` file in the project directory:
+Add your API key to the root `.env` file:
 
 ```env
-GEMINI_API_KEY=your_gemini_api_key
-GEMINI_MODEL=gemini-flash-latest
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=your_available_gemini_model
 ```
 
-Replace `your_gemini_api_key` with your actual Gemini API key.
+The application reads `GEMINI_API_KEY` and optionally `GEMINI_MODEL`. If `GEMINI_MODEL` is not set, the source code currently defaults to `gemini-3.5-flash-lite`. Use a model currently available to your Gemini API account.
 
-Never commit your `.env` file to GitHub.
+Keep the real `.env` file private and never commit API keys.
 
-### 4. Run the chatbot
+## Run
 
-```bash
+Open PowerShell and navigate to this project folder:
+
+```powershell
+cd "Week 3 - AI API Assistant\3 - Pharmacy Chatbot"
 python main.py
 ```
 
-## Example Conversation
+Run the command with the shared virtual environment activated. The program starts an interactive session. Type `exit` to close it.
 
-```text
-Staff: I have a prescription.
+**Before running the current repository version:** check that the first line of `main.py` contains only valid Python. The version currently in the repository has a stray `cd` line before the imports; remove that line or the script will stop with a syntax error.
 
-Chatbot: We can help you with that!
-Straightforward prescriptions typically take
-15 to 30 minutes, depending on workload,
-medicine availability and pharmacist verification.
+## Example questions
 
-Staff: How long will it take?
+- What are your operating hours?
+- Do you process repeat prescriptions?
+- How long does a straightforward prescription usually take?
+- Do you have a particular medicine in stock?
+- How much does a medication cost?
 
-Chatbot: Straightforward prescriptions typically
-take 15 to 30 minutes. The exact time depends
-on workload and medicine availability.
-```
+For stock and price enquiries, the assistant should explain that it cannot access live inventory or an official price list and direct the customer to pharmacy staff.
 
-The chatbot remembers the earlier prescription enquiry and understands the follow-up question.
+## Safety and limitations
 
-## Conversation Memory
+- Requires internet access and a working Gemini API key.
+- Depends on Gemini API availability and account usage limits.
+- Does not connect to live medicine inventory or pricing.
+- Does not access patient records or process prescriptions.
+- Does not diagnose conditions, recommend treatment, or replace pharmacist judgement.
+- Pharmacy operating hours, services, and processing guidance are prompt-defined information and must be kept accurate.
+- Conversation context exists only during the active session.
+- The current source prints technical exception details to the terminal for debugging; these should be handled more carefully in a deployed application.
 
-The application uses Gemini's chat session functionality to maintain conversation history.
+## Possible next improvements
 
-This allows the chatbot to:
-- Understand follow-up questions.
-- Retain relevant information shared earlier.
-- Provide more natural conversational responses.
+- Move pharmacy information into a separately editable configuration source.
+- Add tests for common questions, follow-up questions, and unsupported requests.
+- Add stronger privacy and logging controls.
+- Connect to approved, access-controlled inventory and pricing systems if required.
+- Build a web interface for staff or customers.
+- Add a clear handoff workflow to pharmacy staff for questions the assistant cannot answer.
 
-Conversation history is maintained during the active application session. It is not permanently stored between application restarts.
+## Purpose
 
-## Limitations
-
-- Requires an active internet connection and a valid Gemini API key.
-- Depends on Gemini API availability and usage limits.
-- Does not access live pharmacy inventory.
-- Does not have access to an official medication price list.
-- Does not replace professional medical advice or pharmacist verification.
-- Prescription processing times and documentation requirements should be confirmed by pharmacy management.
-
-## Future Improvements
-
-- Integrate a pharmacy inventory database.
-- Add medication pricing information.
-- Introduce persistent conversation history.
-- Build a graphical or web-based interface.
-- Add more robust API retry and recovery mechanisms.
-
-## Author
-
-Developed as a Python AI API assistant project.
+This project explores conversational AI, system instructions, Gemini chat sessions, context retention, and responsible boundaries for an AI-powered information assistant.
