@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eldoret Hardware - Credit Tracker</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        input, button {
+            padding: 12px;
+            margin-top: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Eldoret Hardware</h1>
+        <p>Customer Credit Balance Tracker</p>
+
+        <form id="searchForm">
+            <input
+                type="text"
+                id="customer"
+                placeholder="Enter customer name"
+                required
+            >
+
+            <button type="submit">Check Balance</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById("searchForm").addEventListener(
+            "submit", async function(event) {
+
+                event.preventDefault();
+
+                const name = document.getElementById("customer").value.trim();
+
+                const result = document.getElementById("result");
+
+                try {
+                    const response = await fetch(
+                        `/api/balance?customer=${encodeURIComponent(name)}`
+                    );
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        result.textContent =
+                            `Customer: ${data.customer} | Balance: KES ${data.balance.toLocaleString()}`;
+                    } else {
+                        result.textContent = data.error;
+                    }
+
+                } catch (error) {
+                    result.textContent = "Unable to connect to the server.";
+                    console.error(error);
+                }
+            }
+        );
+    </script>
+</body>
+</html>
