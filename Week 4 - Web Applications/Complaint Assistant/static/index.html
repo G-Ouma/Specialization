@@ -1,0 +1,47 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Reply Assistant</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+    <main class="container">
+
+        <h1>Complaint Reply Assistant</h1>
+
+        <p class="subtitle">
+            Turn customer complaints into professional responses.
+        </p>
+
+        <label for="complaint">Customer Complaint</label>
+
+        <textarea
+            id="complaint"
+            placeholder="Paste the customer's complaint here..."
+        ></textarea>
+
+        <button id="generateBtn">
+            Generate Reply
+        </button>
+        
+        <section id="result">
+            <h2>Generated Reply</h2>
+
+            <div id="reply"></div>
+
+            <button id="copyBtn" type="button">
+                Copy Reply
+            </button>
+        </section>
+
+        <div id="status" role="status" aria-live="polite"></div>
+
+    </main>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
