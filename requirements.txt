@@ -4,3 +4,5 @@ requests
 fastapi
 gspread
 google-auth-oauthlib
+sqlalchemy
+psycopg[binary]
