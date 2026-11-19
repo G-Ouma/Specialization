@@ -4,34 +4,35 @@ from app.queries import (
     compare_players,
     get_player_leaderboard
 )
+from app.database import TestSessionLocal
 
 
 def test_search_player_by_name():
-    results = search_players(name="Rashid")
+    results = search_players(name="Rashid", session_factory=TestSessionLocal)
 
     assert len(results) == 1
     assert results[0][0].name == "Rashid Moyo"
 
 def test_search_players_by_position():
-    results = search_players(position="Winger")
+    results = search_players(position="Winger", session_factory=TestSessionLocal)
 
-    assert len(results) == 5
+    assert len(results) == 1
 
     for player, statistics in results:
         assert player.position == "Winger"
 
 def test_search_players_by_minimum_goals():
-    results = search_players(minimum_goals=5)
+    results = search_players(minimum_goals=5, session_factory=TestSessionLocal)
 
-    assert len(results) == 4
+    assert len(results) == 2
 
     for player, statistics in results:
         assert statistics.goals >= 5
 
 def test_search_players_by_minimum_assists():
-    results = search_players(minimum_assists=3)
+    results = search_players(minimum_assists=3, session_factory=TestSessionLocal)
 
-    assert len(results) == 4
+    assert len(results) == 3
 
     for player, statistics in results:
         assert statistics.assists >= 3
@@ -39,17 +40,18 @@ def test_search_players_by_minimum_assists():
 def test_search_players_with_combined_filters():
     results = search_players(
         position="Winger",
-        minimum_goals=2
+        minimum_goals=2,
+        session_factory=TestSessionLocal
     )
 
-    assert len(results) == 3
+    assert len(results) == 1
 
     for player, statistics in results:
         assert player.position == "Winger"
         assert statistics.goals >= 2
 
 def test_compare_two_players():
-    results = compare_players("Rashid", "George")
+    results = compare_players("Rashid", "George", session_factory=TestSessionLocal)
 
     assert len(results) == 2
     assert results[0][0].name == "Rashid Moyo"
@@ -57,19 +59,20 @@ def test_compare_two_players():
 
 def test_compare_with_unknown_player():
     with pytest.raises(ValueError, match="No player found"):
-        compare_players("Unknown Player", "Rashid")
+        compare_players("Unknown Player", "Rashid", session_factory=TestSessionLocal)
 
 def test_compare_with_ambiguous_player():
     with pytest.raises(ValueError, match="Multiple players match"):
-        compare_players("Robert", "Rashid")
+        compare_players("Robert", "Rashid", session_factory=TestSessionLocal)
 
 def test_goals_leaderboard():
     results = get_player_leaderboard(
         statistic="goals",
-        limit=5
+        limit=5,
+        session_factory=TestSessionLocal
     )
 
-    assert len(results) == 5
+    assert len(results) == 4
     assert results[0][0].name == "Rashid Moyo"
     assert results[0][1].goals == 15
 
@@ -78,23 +81,24 @@ def test_goals_leaderboard():
 
 def test_leaderboard_rejects_invalid_statistic():
     with pytest.raises(ValueError, match="Invalid statistic selected"):
-        get_player_leaderboard(statistic="yellow_cards")
+        get_player_leaderboard(statistic="yellow_cards", session_factory=TestSessionLocal)
 
 def test_leaderboard_rejects_zero_limit():
     with pytest.raises(ValueError, match="Limit must be at least 1"):
-        get_player_leaderboard(statistic="goals", limit=0)
+        get_player_leaderboard(statistic="goals", limit=0, session_factory=TestSessionLocal)
 
 def test_leaderboard_default_settings():
-    results = get_player_leaderboard()
+    results = get_player_leaderboard(session_factory=TestSessionLocal)
 
-    assert len(results) == 10
+    assert len(results) == 4
     assert results[0][0].name == "Rashid Moyo"
     assert results[0][1].goals == 15
 
 def test_leaderboard_sorts_tied_goals_by_name():
     results = get_player_leaderboard(
         statistic="goals",
-        limit=10
+        limit=4,
+        session_factory=TestSessionLocal
     )
 
     for index in range(len(results) - 1):

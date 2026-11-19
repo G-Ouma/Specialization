@@ -1,5 +1,9 @@
 from fastapi.testclient import TestClient
 from app.main import app
+from app.main import get_session_factory
+from app.database import TestSessionLocal
+
+app.dependency_overrides[get_session_factory] = lambda: TestSessionLocal
 
 client = TestClient(app)
 
@@ -18,7 +22,7 @@ def test_get_all_players():
 
     players = response.json()
 
-    assert len(players) == 25
+    assert len(players) == 4
     assert players[0]["name"] == "Rashid Moyo"
 
 def test_search_player_by_name():
@@ -45,7 +49,7 @@ def test_search_players_with_combined_filters():
 
     players = response.json()
 
-    assert len(players) == 3
+    assert len(players) == 1
 
     for player in players:
         assert player["position"] == "Winger"
@@ -111,7 +115,7 @@ def test_player_leaderboard_default():
 
     players = response.json()
 
-    assert len(players) == 10
+    assert len(players) == 4
     assert players[0]["name"] == "Rashid Moyo"
     assert players[0]["value"] == 15
 
@@ -121,7 +125,7 @@ def test_player_leaderboard_with_assists():
         "/players/leaderboard",
         params={
             "statistic": "assists",
-            "limit": 5
+            "limit": 4
         }
     )
 
@@ -129,7 +133,7 @@ def test_player_leaderboard_with_assists():
 
     players = response.json()
 
-    assert len(players) == 5
+    assert len(players) == 4
     assert players[0]["statistic"] == "assists"
 
 

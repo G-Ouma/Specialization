@@ -6,9 +6,10 @@ def search_players(
     name=None,
     position=None,
     minimum_goals=None,
-    minimum_assists=None
+    minimum_assists=None,
+    session_factory=SessionLocal
 ):
-    with SessionLocal() as session:
+    with session_factory() as session:
         query = (
             session.query(Player, PlayerStatistics)
             .join(PlayerStatistics)
@@ -37,8 +38,12 @@ def search_players(
 
 
 
-def compare_players(player_name_1, player_name_2):
-    with SessionLocal() as session:
+def compare_players(
+        player_name_1, 
+        player_name_2,
+        session_factory=SessionLocal
+        ):
+    with session_factory() as session:
 
         # Find the first player
         player_1 = (
@@ -78,7 +83,7 @@ def compare_players(player_name_1, player_name_2):
 
 
 
-def get_player_leaderboard(statistic="goals", limit=10):
+def get_player_leaderboard(statistic="goals", limit=10, session_factory=SessionLocal):
     allowed_statistics = {
         "goals",
         "assists",
@@ -95,7 +100,7 @@ def get_player_leaderboard(statistic="goals", limit=10):
     if limit < 1:
         raise ValueError("Limit must be at least 1.")
 
-    with SessionLocal() as session:
+    with session_factory() as session:
         return (
             session.query(Player, PlayerStatistics)
             .join(PlayerStatistics)

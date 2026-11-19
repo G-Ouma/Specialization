@@ -1,5 +1,5 @@
-from fastapi import FastAPI
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
+from app.database import SessionLocal
 
 from app.queries import search_players
 from app.queries import compare_players
@@ -15,6 +15,10 @@ app = FastAPI(
 )
 
 
+def get_session_factory():
+    return SessionLocal
+
+
 @app.get("/")
 def home():
     return {
@@ -27,13 +31,15 @@ def get_players(
     name: str | None = None,
     position: str | None = None,
     minimum_goals: int | None = None,
-    minimum_assists: int | None = None
+    minimum_assists: int | None = None,
+    session_factory=Depends(get_session_factory)
 ):
     results = search_players(
         name=name,
         position=position,
         minimum_goals=minimum_goals,
-        minimum_assists=minimum_assists
+        minimum_assists=minimum_assists,
+        session_factory=session_factory
     )
 
     return [
@@ -60,10 +66,11 @@ def get_players(
 )
 def compare_two_players(
     player1: str,
-    player2: str
+    player2: str,
+    session_factory=Depends(get_session_factory)
 ):
     try:
-        results = compare_players(player1, player2)
+        results = compare_players(player1, player2, session_factory=session_factory)
 
         return [
             {
@@ -95,12 +102,14 @@ def compare_two_players(
 @app.get("/players/leaderboard")
 def player_leaderboard(
     statistic: str = "goals",
-    limit: int = 10
+    limit: int = 10,
+    session_factory=Depends(get_session_factory)
 ):
     try:
         results = get_player_leaderboard(
             statistic=statistic,
-            limit=limit
+            limit=limit,
+            session_factory=session_factory
         )
 
         return [
