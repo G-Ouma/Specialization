@@ -1,0 +1,13 @@
+transaction_id,item_name,quantity_sold,price,stock_on_hand,restock_level
+T001,Unga,3,180,12,10
+T002,Milk,2,70,8,10
+T003,Bread,4,65,15,8
+T004,Unga,5,180,12,10
+T005,Sugar,2,160,6,10
+T006,Milk,3,70,8,10
+T007,Rice,2,220,20,10
+T008,Bread,3,65,15,8
+T009,Cooking Oil,2,350,4,8
+T010,Unga,4,180,12,10
+T011,Sugar,3,160,6,10
+T012,Milk,2,70,8,10
