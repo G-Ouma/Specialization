@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Scouting Intelligence</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div>
+                <h1>Football Scouting Intelligence</h1>
+                <p>Discover players. Analyse performance. Make informed decisions.</p>
+            </div>
+
+            <nav>
+                <a href="#dashboard">Dashboard</a>
+                <a href="#discovery">Player Discovery</a>
+                <a href="#comparison">Comparison</a>
+                <a href="#leaderboard">Leaderboard</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="dashboard" id="dashboard">
+            <div class="stat-card">
+                <h2 id="total-players">--</h2>
+                <p>Total Players</p>
+            </div>
+
+            <div class="stat-card">
+                <h2 id="top-goals">--</h2>
+                <p>Highest Goals</p>
+            </div>
+
+            <div class="stat-card">
+                <h2 id="total-positions">--</h2>
+                <p>Positions</p>
+            </div>
+        </section>
+
+        <section class="player-search" id="discovery">
+            <h2>Player Discovery</h2>
+
+            <input
+                type="text"
+                id="player-name"
+                placeholder="Search player by name"
+            >
+
+            <select id="player-position">
+                <option value="">All Positions</option>
+                <option value="Striker">Striker</option>
+                <option value="Winger">Winger</option>
+                <option value="Midfielder">Midfielder</option>
+                <option value="Attacking Midfielder">Attacking Midfielder</option>
+                <option value="Centre Back">Centre Back</option>
+                <option value="Fullback">Fullback</option>
+                <option value="Goalkeeper">Goalkeeper</option>
+            </select>
+
+            <button id="search-button">Search Players</button>
+            <p id="search-summary">Showing all players</p>
+        </section>
+
+        <section class="player-results">
+            <h2>Players</h2>
+
+            <p id="status-message">Loading players...</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        <th>Position</th>
+                        <th>Goals</th>
+                        <th>Assists</th>
+                        <th>Pass Accuracy</th>
+                    </tr>
+                </thead>
+
+                <tbody id="players-table">
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <button id="previous-page" disabled>Previous</button>
+                <span id="page-info">Page 1</span>
+                <button id="next-page">Next</button>
+            </div>
+
+        </section>        
+
+        <section id="player-profile" style="display: none;">
+
+            <div class="profile-header">
+                <h2>Player Profile</h2>
+                <button id="close-profile">Close Profile</button>
+            </div>
+
+            <div id="profile-content"></div>
+        </section>
+
+        <section class="player-comparison" id="comparison">
+            <h2>Compare Players</h2>
+            <p>Select two players to compare their performance.</p>
+
+            <div class="comparison-controls">
+                <input
+                    type="text"
+                    id="player-one"
+                    placeholder="First player name"
+                >
+
+                <input
+                    type="text"
+                    id="player-two"
+                    placeholder="Second player name"
+                >
+
+                <button id="compare-button">Compare Players</button>
+            </div>
+
+            <div id="comparison-results"></div>
+        </section>
+        
+        <section class="leaderboard" id="leaderboard">
+            <h2>Player Leaderboard</h2>
+            <p>Rank players by their performance statistics.</p>
+
+            <div class="leaderboard-controls">
+                <select id="leaderboard-statistic">
+                    <option value="goals">Goals</option>
+                    <option value="assists">Assists</option>
+                    <option value="goals_per_90">Goals per 90</option>
+                    <option value="assists_per_90">Assists per 90</option>
+                    <option value="pass_accuracy">Passing Accuracy</option>
+                    <option value="interceptions">Interceptions</option>
+                    <option value="tackles_won">Tackles Won</option>
+                </select>
+
+                <input
+                    type="number"
+                    id="leaderboard-limit"
+                    value="10"
+                    min="1"
+                    placeholder="Number of players"
+                >
+
+                <button id="leaderboard-button">Generate Leaderboard</button>
+            </div>
+
+            <div id="leaderboard-results"></div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

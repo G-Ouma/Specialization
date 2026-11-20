@@ -1,0 +1,177 @@
+[
+  {
+    "name": "Rashid Moyo",
+    "position": "Striker",
+    "goals": 15,
+    "assists": 1,
+    "pass_accuracy": 77.5
+  },
+  {
+    "name": "Bevex David",
+    "position": "Winger",
+    "goals": 7,
+    "assists": 2,
+    "pass_accuracy": 83.7
+  },
+  {
+    "name": "George Kamau",
+    "position": "Attacking Midfielder",
+    "goals": 7,
+    "assists": 5,
+    "pass_accuracy": 82
+  },
+  {
+    "name": "Bernard Lusi",
+    "position": "Centre Back",
+    "goals": 5,
+    "assists": 1,
+    "pass_accuracy": 88.1
+  },
+  {
+    "name": "Bramwel Simiyu",
+    "position": "Striker",
+    "goals": 3,
+    "assists": 0,
+    "pass_accuracy": 85.4
+  },
+  {
+    "name": "Robert Mutua",
+    "position": "Midfielder",
+    "goals": 3,
+    "assists": 5,
+    "pass_accuracy": 89.5
+  },
+  {
+    "name": "Mainge Muthoka",
+    "position": "Winger",
+    "goals": 2,
+    "assists": 5,
+    "pass_accuracy": 85.8
+  },
+  {
+    "name": "Wayne Mureithi",
+    "position": "Winger",
+    "goals": 2,
+    "assists": 0,
+    "pass_accuracy": 81.4
+  },
+  {
+    "name": "Abdi Abdi",
+    "position": "Fullback",
+    "goals": 1,
+    "assists": 0,
+    "pass_accuracy": 87.1
+  },
+  {
+    "name": "Barrack Dago",
+    "position": "Centre Back",
+    "goals": 1,
+    "assists": 1,
+    "pass_accuracy": 89.8
+  },
+  {
+    "name": "Deng Kang",
+    "position": "Winger",
+    "goals": 1,
+    "assists": 1,
+    "pass_accuracy": 86.1
+  },
+  {
+    "name": "Josiah Timpati",
+    "position": "Attacking Midfielder",
+    "goals": 1,
+    "assists": 0,
+    "pass_accuracy": 79.7
+  },
+  {
+    "name": "Sydney Ogutu",
+    "position": "Midfielder",
+    "goals": 1,
+    "assists": 0,
+    "pass_accuracy": 88.1
+  },
+  {
+    "name": "Vinedine Ambetsa",
+    "position": "Fullback",
+    "goals": 1,
+    "assists": 3,
+    "pass_accuracy": 83
+  },
+  {
+    "name": "Dark Janafil",
+    "position": "Midfielder",
+    "goals": 0,
+    "assists": 0,
+    "pass_accuracy": 83.6
+  },
+  {
+    "name": "Edward Olak",
+    "position": "Goalkeeper",
+    "goals": 0,
+    "assists": 0,
+    "pass_accuracy": 76.9
+  },
+  {
+    "name": "Elvis Odhiambo",
+    "position": "Midfielder",
+    "goals": 0,
+    "assists": 1,
+    "pass_accuracy": 89.2
+  },
+  {
+    "name": "Frederick Iyanza",
+    "position": "Winger",
+    "goals": 0,
+    "assists": 1,
+    "pass_accuracy": 87.1
+  },
+  {
+    "name": "Henry Obala",
+    "position": "Midfielder",
+    "goals": 0,
+    "assists": 0,
+    "pass_accuracy": 91.4
+  },
+  {
+    "name": "Isaac Owiyo",
+    "position": "Fullback",
+    "goals": 0,
+    "assists": 2,
+    "pass_accuracy": 86.6
+  },
+  {
+    "name": "Michael Onyango",
+    "position": "Goalkeeper",
+    "goals": 0,
+    "assists": 0,
+    "pass_accuracy": 74.6
+  },
+  {
+    "name": "Robert Wayua",
+    "position": "Midfielder",
+    "goals": 0,
+    "assists": 1,
+    "pass_accuracy": 91.3
+  },
+  {
+    "name": "Samuel Ndungu",
+    "position": "Striker",
+    "goals": 0,
+    "assists": 0,
+    "pass_accuracy": 87.5
+  },
+  {
+    "name": "Samuel Ochieng",
+    "position": "Midfielder",
+    "goals": 0,
+    "assists": 1,
+    "pass_accuracy": 95.6
+  },
+  {
+    "name": "Song Wingston",
+    "position": "Centre Back",
+    "goals": 0,
+    "assists": 0,
+    "pass_accuracy": 92.4
+  }
+]

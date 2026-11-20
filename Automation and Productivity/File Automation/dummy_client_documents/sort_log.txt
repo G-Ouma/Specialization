@@ -1,0 +1,12 @@
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/budget.xlsx -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Other/budget.xlsx
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/court_order.PDF -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Filings/court_order.PDF
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/audio_recording.mp3 -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Other/audio_recording.mp3
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/IMG_4827.jpg -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Evidence/IMG_4827.jpg
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/photo.jpeg -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Evidence/photo.jpeg
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/meeting_notes.txt -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Correspondence/meeting_notes.txt
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/scan001.pdf -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Filings/scan001.pdf
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/lease.doc -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Contracts/lease.doc
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/client_email.eml -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Correspondence/client_email.eml
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/Contract_FINAL_v3.docx -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Contracts/Contract_FINAL_v3.docx
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/README -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Other/README
+2026-11-14T05:33:44+00:00 | /mnt/data/legal_file_sorter_demo/dummy_client_documents/site_photo.png -> /mnt/data/legal_file_sorter_demo/dummy_client_documents/Evidence/site_photo.png

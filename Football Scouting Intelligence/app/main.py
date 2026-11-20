@@ -1,17 +1,28 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Query
+from fastapi.middleware.cors import CORSMiddleware
+
 from app.database import SessionLocal
 
-from app.queries import search_players
+from app.queries import search_players, count_players, get_dashboard_stats, get_player_profile
 from app.queries import compare_players
 from app.queries import get_player_leaderboard
 
-from app.schemas import PlayerResponse
+from app.schemas import PlayerResponse, PlayerProfileResponse
 
 
 app = FastAPI(
     title="Football Scouting Intelligence API",
     description="API for searching, comparing and analysing football players.",
     version="1.0.0"
+)
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5500"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -32,6 +43,8 @@ def get_players(
     position: str | None = None,
     minimum_goals: int | None = None,
     minimum_assists: int | None = None,
+    skip: int = Query(default=0, ge=0),
+    limit: int = Query(default=10, ge=1, le=100),
     session_factory=Depends(get_session_factory)
 ):
     results = search_players(
@@ -39,6 +52,8 @@ def get_players(
         position=position,
         minimum_goals=minimum_goals,
         minimum_assists=minimum_assists,
+        skip=skip,
+        limit=limit,
         session_factory=session_factory
     )
 
@@ -55,6 +70,27 @@ def get_players(
         for player, statistics in results
     ]
 
+
+@app.get("/players/count")
+def get_players_count(
+    name: str | None = None,
+    position: str | None = None,
+    minimum_goals: int | None = None,
+    minimum_assists: int | None = None,
+):
+    return {
+        "total": count_players(
+            name=name,
+            position=position,
+            minimum_goals=minimum_goals,
+            minimum_assists=minimum_assists
+        )
+    }
+
+
+@app.get("/dashboard")
+def dashboard():
+    return get_dashboard_stats()
 
 
 @app.get(
@@ -97,6 +133,19 @@ def compare_two_players(
             status_code=status_code,
             detail=message
         )
+
+
+@app.get("/players/{player_name}/profile", response_model=PlayerProfileResponse)
+def player_profile(player_name: str):
+    profile = get_player_profile(player_name)
+
+    if profile is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Player not found."
+        )
+
+    return profile
 
 
 @app.get("/players/leaderboard")

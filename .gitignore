@@ -17,4 +17,5 @@ travel_history.json
 # Test and development artifacts
 .pytest_cache/
 .coverage
-htmlcov/
+htmlcov//NOTES.docx
+/~$NOTES.docx
