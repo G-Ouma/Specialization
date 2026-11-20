@@ -2,26 +2,30 @@
 
 ## Purpose
 
-Practice calling the REST Countries API directly from a web browser using JavaScript's `fetch()` function.
+A small browser-based exercise for searching country information using the REST Countries API and JavaScript's `fetch()` function.
 
 ## File
 
-- `day4_fetch.html` — provides a simple country search page and displays country information returned by the API.
+- `day4_fetch.html` — contains the search interface and JavaScript that requests a country by common name, then displays its flag, capital, region, and population.
 
 ## Run
 
-Open `day4_fetch.html` in a browser, enter a country name, and select **Search**. The page also supports pressing Enter.
+Open `day4_fetch.html` in a modern web browser. Enter a country name and select **Search**. Pressing Enter in the input field also starts the lookup.
 
-No Python package is required for this HTML exercise. The shared environment remains available for the other projects in this repository.
+No Python server or package is required for this exercise.
 
-## Learning points
+## Concepts practised
 
-- Calling an API from browser JavaScript
-- Using `fetch()` and `async/await`
+- Browser-side HTTP requests with `fetch()`
+- `async/await` and promise-based request handling
 - Encoding user input for a URL
-- Handling unsuccessful HTTP responses
-- Displaying API response data in a web page
+- Checking `response.ok` and handling unsuccessful responses
+- Updating page content with returned JSON data
 
-## Security note
+## Credential and security note
 
-The current HTML exercise contains a demonstration credential in the request header. Do not replace it with a real private API key in browser code: credentials embedded in client-side HTML/JavaScript are visible to users. A production implementation should make authenticated requests through a backend.
+The current exercise includes a demonstration authorization value in the HTML. It is not a private key. Do not put a real secret in browser HTML or JavaScript: anyone using the page can inspect client-side code and network requests. A production application that requires a private credential should make the authenticated API request through a backend.
+
+## Limitations
+
+This is a single-page learning exercise. It does not include a backend, persistent search history, or automated browser tests.

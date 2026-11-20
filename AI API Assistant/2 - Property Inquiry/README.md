@@ -2,45 +2,37 @@
 
 ## Overview
 
-Property Inquiry Extractor is a Python command-line prototype that uses Google's Gemini API to turn unstructured property enquiries into structured information and append the results to a Google Sheet.
+This Python command-line prototype uses Google's Gemini API to extract property requirements from a manually entered enquiry and append the results to a Google Sheet. It is designed around messages a real-estate agent might receive through WhatsApp, but it does not connect to WhatsApp.
 
-It is designed around enquiries a property agent might receive in a WhatsApp message. The current prototype accepts messages manually in the terminal; it does not connect to WhatsApp.
+## Extracted fields
 
-## What it extracts
-
-The application asks Gemini to return these fields:
-
-| Field | Description |
+| Field | Meaning |
 |---|---|
-| `property_type` | Property category, such as apartment, house or bedsitter |
-| `bedrooms` | Explicitly stated number of bedrooms |
-| `location` | Mentioned area or location |
-| `budget_kes` | Budget converted to a whole-number KES amount |
+| `property_type` | Property category, such as bedsitter, apartment, house, townhouse, or maisonette |
+| `bedrooms` | Explicitly stated bedroom count; otherwise null |
+| `location` | Area or location mentioned in the enquiry |
+| `budget_kes` | Budget normalized to a whole-number KES amount |
 | `rental_or_sale` | `rental`, `sale`, or null when not stated |
 
-The extraction instructions tell the model not to invent missing details. Missing values are represented as `null` and displayed as “Not specified”.
+The extraction instructions tell Gemini not to invent missing details. Missing values are represented as null and displayed as “Not specified”.
 
-After extraction, the original message and extracted fields are appended to the first worksheet of the configured Google spreadsheet.
+## Processing flow
 
-## How it works
-
-1. The user enters a property enquiry in the terminal.
-2. Gemini interprets the message and returns data matching a defined JSON schema.
+1. Enter an enquiry in the terminal.
+2. Gemini returns data matching the application's JSON schema.
 3. Python parses and displays the extracted fields.
-4. The application authenticates with Google Sheets using a locally stored OAuth token.
-5. The original message and extracted details are appended as a new spreadsheet row.
+4. The application authenticates to Google Sheets using a locally stored OAuth token.
+5. The original message and extracted values are appended to the first worksheet.
 
 ## Technology
 
-- Python
+- Python and JSON
 - Google Gemini API through the Google Gen AI SDK
-- Google Sheets API
-- `gspread`
-- `google-auth-oauthlib` and `google-auth`
+- Google Sheets API and `gspread`
+- `google-auth`, `google-auth-oauthlib`
 - `python-dotenv`
-- JSON
 
-## Project files
+## Files
 
 ```text
 2 - Property Inquiry/
@@ -49,120 +41,62 @@ After extraction, the original message and extracted fields are appended to the 
 └── README.md
 ```
 
-The project uses the shared virtual environment, dependency file, and environment configuration at the root of the `Specialization` repository. OAuth files are created locally and should not be committed.
+The shared virtual environment and root `requirements.txt` are used. OAuth credentials and tokens are local files and must not be committed.
 
 ## Setup
 
-### 1. Prepare the shared environment
+### 1. Shared environment
 
-From the root of the `Specialization` repository, activate the shared virtual environment and install the root dependencies if you have not already done so.
+From the repository root, activate the shared environment and install root dependencies. See the [main README](../../../README.md).
 
-Windows PowerShell:
+### 2. Gemini key
 
-```powershell
-.\venv\Scripts\Activate.ps1
-python -m pip install -r requirements.txt
-```
-
-See the [main repository README](../../../README.md) for the complete shared setup.
-
-### 2. Configure the Gemini API key
-
-Add your key to the root `.env` file:
+Add this to the root `.env`:
 
 ```env
-GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
-The project loads this environment variable with `python-dotenv`. Keep the real `.env` file private.
+### 3. Google Sheets OAuth
 
-### 3. Configure Google Sheets access
+You need a Google Cloud project with the Google Sheets API enabled, OAuth credentials for a Desktop application, and a spreadsheet editable by the Google account used for authorization.
 
-You need:
-- A Google Cloud project with the Google Sheets API enabled.
-- OAuth credentials for a Desktop application.
-- A Google spreadsheet that the Google account used for OAuth can edit.
+Save the downloaded OAuth client file in this project folder as `client_secret.json`. Run `test_sheets.py` to perform the OAuth flow and create `token.json`. The main application expects an existing token and does not initiate the login flow itself.
 
-Download the OAuth client credentials and save them in this project folder as `client_secret.json`.
+The spreadsheet ID is currently hard-coded in both scripts. Replace it with your own spreadsheet ID before running them.
 
-The current `Main.py` expects an existing `token.json`; it does not initiate the OAuth login flow itself. The `test_sheets.py` script performs that authorization flow, saves the token, and appends a sample row to the spreadsheet.
-
-Before running either script, replace the spreadsheet ID in both `Main.py` and `test_sheets.py` with the ID of your own spreadsheet.
-
-### 4. Prepare the spreadsheet
-
-The first worksheet should have columns in this order:
-
-| Column | Value |
-|---|---|
-| A | Date received |
-| B | Original message |
-| C | Property type |
-| D | Bedrooms |
-| E | Location |
-| F | Budget (KES) |
-| G | Rental or sale |
+The first worksheet is expected to have columns in this order: Date received, Original message, Property type, Bedrooms, Location, Budget (KES), Rental or sale.
 
 ## Run
 
-Run commands from the Property Inquiry folder, with the shared virtual environment activated.
-
-### Authorize and test Google Sheets
+From this folder, with the shared environment activated:
 
 ```powershell
 python test_sheets.py
-```
-
-This opens the Google OAuth authorization flow if a valid token is not already available. It then appends a sample enquiry row. Running it again may append another sample row.
-
-### Process enquiries
-
-After `token.json` has been created:
-
-```powershell
 python Main.py
 ```
 
-Enter an enquiry when prompted. Type `exit` to close the program.
+The test script authorizes Google Sheets and appends a sample row. Running it more than once can add duplicate sample rows. The main program then accepts enquiries until you enter `exit`.
 
-Example enquiry:
+Example:
 
 ```text
-I am looking for a 3-bedroom house in Kileleshwa,
-budget around 80k per month.
+I am looking for a 3-bedroom house in Kileleshwa, budget around 80k per month.
 ```
-
-The program displays the extracted details and attempts to save them to the spreadsheet.
 
 ## Testing notes
 
-The code includes several example enquiry strings in `Main.py`, covering:
-- A three-bedroom house in Kileleshwa with a monthly budget of KES 80,000.
-- Bedsitters near Westlands under KES 20,000.
-- An enquiry with few specified details.
-- A two-bedroom apartment in Kilimani with a monthly budget of KES 65,000.
+The example enquiry strings in `Main.py` are reference examples; they are not automatically run as an extraction test suite. `test_sheets.py` tests authorization and spreadsheet row insertion, not Gemini extraction accuracy.
 
-These examples are currently stored in a list in the script; they are not automatically executed as a test suite. The separate `test_sheets.py` script tests Google Sheets authorization and row insertion, not the Gemini extraction logic.
-
-## Current limitations
+## Limitations
 
 - Enquiries are entered manually; WhatsApp integration is not implemented.
-- The application does not extract customer names or contact details.
-- Duplicate detection and enquiry status tracking are not implemented.
-- The spreadsheet ID is currently hard-coded in the scripts.
-- The main application relies on a previously created OAuth token.
-- The Gemini model name is currently specified in the source code and may need updating if that model is unavailable.
-- Extracted information should be checked by a person before being treated as a confirmed customer requirement.
+- Customer names and contact details are not extracted.
+- Duplicate detection and lead-status tracking are not implemented.
+- Spreadsheet ID and Gemini model are configured in source code.
+- A valid OAuth token must already exist before the main program can save data.
+- Human review is recommended before treating extracted details as confirmed requirements.
 
-## Possible next improvements
+## Learning objectives
 
-- Move the spreadsheet ID and model name into configuration.
-- Add a dedicated automated test suite for extraction and normalization.
-- Improve validation of budgets and property requirements.
-- Add duplicate detection and lead status tracking.
-- Integrate WhatsApp Business messaging.
-- Build a dashboard for reviewing and managing enquiries.
-
-## Purpose
-
-This project explores practical AI-assisted information extraction, structured JSON output, API integration, OAuth authentication, and automated spreadsheet updates.
+This project practises structured AI extraction, JSON schema use, OAuth authentication, API integration, and automated spreadsheet updates.

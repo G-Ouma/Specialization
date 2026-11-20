@@ -1,35 +1,18 @@
 # Python & AI/ML Specialization
 
-This repository documents my practical learning journey in Python, API integration, automation, and Artificial Intelligence/Machine Learning (AI/ML).
+A practical Python learning repository focused on building small, working applications while developing skills in API integration, generative AI, automation, web development, and data-driven tools.
 
-The focus is on learning by building: each project applies a concept to a small, practical problem, with code, testing, and documentation that evolve as the work progresses.
+The repository is organized by project area rather than week number. Each project has its own folder and, where applicable, its own setup instructions.
 
-## Repository contents
+## Repository projects
 
-### Week 1 — APIs
-
-Practical exercises in working with external APIs, handling JSON data, managing API credentials, and using APIs from Python and browser JavaScript.
-
-| Project | What it covers |
+| Area | Projects |
 |---|---|
-| [01 - API Basics](Week%201%20-%20APIs/01%20-%20API%20Basics/README.md) | Making HTTP requests and reading REST Countries API responses |
-| [02 - Weather API](Week%201%20-%20APIs/02%20-%20Weather%20API/README.md) | Retrieving current weather data from OpenWeather |
-| [03 - Travel Information API](Week%201%20-%20APIs/03%20-%20Travel%20Information%20API/README.md) | Combining weather and country data and saving search history |
-| [04 - Browser Country Lookup](Week%201%20-%20APIs/04%20-%20Browser%20Country%20Lookup/README.md) | Calling a country API from a browser with JavaScript `fetch()` |
-
-### Week 3 — AI API Assistant
-
-Small AI-powered applications built with Python and Google's Gemini API.
-
-| Project | What it covers |
-|---|---|
-| [1 - Matatu Assistant](Week%203%20-%20AI%20API%20Assistant/1%20-%20Matatu%20Assistant/README.md) | A command-line SACCO member FAQ assistant using sample information |
-| [2 - Property Inquiry](Week%203%20-%20AI%20API%20Assistant/2%20-%20Property%20Inquiry/README.md) | Extracting structured property requirements from natural-language inquiries and saving them to Google Sheets |
-| [3 - Pharmacy Chatbot](Week%203%20-%20AI%20API%20Assistant/3%20-%20Pharmacy%20Chatbot/README.md) | A conversational pharmacy information assistant with session context |
-| [4 - Tea Harvest Assistant](Week%203%20-%20AI%20API%20Assistant/4%20-%20Tea%20Harvest%20Assistant/README.md) | Using Gemini function calling and weather APIs to support tea-harvesting decisions |
-| [AI Proposal Assistant](Week%203%20-%20AI%20API%20Assistant/AI%20Proposal%20Assistant/README.md) | Analysing client briefs and generating structured proposals with Python-based pricing |
-
-Each project folder contains its own README with project-specific details, configuration, and instructions.
+| [APIs](APIs/README.md) | API Basics, Weather API, Travel Information API, Browser Country Lookup |
+| [AI API Assistant](AI%20API%20Assistant/README.md) | Matatu Assistant, Property Inquiry Extractor, Pharmacy Chatbot, Tea Harvest Assistant, AI Proposal Assistant |
+| [Web Applications](Web%20Applications/README.md) | Complaint Reply Assistant, Credit Tracker, Poultry Egg Production REST API |
+| [Automation and Productivity](Automation%20and%20Productivity/README.md) | Legal Client File Sorter, Jobs Monitor web-scraping project |
+| [Football Scouting Intelligence](Football%20Scouting%20Intelligence/) | Football player statistics and scouting application |
 
 ## Repository structure
 
@@ -39,31 +22,38 @@ Specialization/
 ├── requirements.txt
 ├── .env.example
 ├── .gitignore
-├── Week 1 - APIs/
+├── APIs/
 │   ├── README.md
 │   ├── 01 - API Basics/
 │   ├── 02 - Weather API/
 │   ├── 03 - Travel Information API/
 │   └── 04 - Browser Country Lookup/
-└── Week 3 - AI API Assistant/
-    ├── README.md
-    ├── 1 - Matatu Assistant/
-    ├── 2 - Property Inquiry/
-    ├── 3 - Pharmacy Chatbot/
-    ├── 4 - Tea Harvest Assistant/
-    └── AI Proposal Assistant/
-        ├── README.md
-        ├── backend/
-        └── frontend/
+├── AI API Assistant/
+│   ├── README.md
+│   ├── 1 - Matatu Assistant/
+│   ├── 2 - Property Inquiry/
+│   ├── 3 - Pharmacy Chatbot/
+│   ├── 4 - Tea Harvest Assistant/
+│   └── AI Proposal Assistant/
+├── Web Applications/
+│   ├── README.md
+│   ├── Complaint Assistant/
+│   ├── Credit Tracker/
+│   └── REST API/
+├── Automation and Productivity/
+│   ├── README.md
+│   ├── File Automation/
+│   └── Web Scraping/
+└── Football Scouting Intelligence/
 ```
 
-## Shared Python environment
+## Python environment
 
-All Python projects use one virtual environment at the repository root and the root `requirements.txt`. Do not create separate virtual environments or project-level dependency files unless a project has a specific requirement that cannot be managed centrally.
+Most Python exercises use one shared virtual environment at the repository root. Do not create a separate environment for every project.
 
 ### Windows PowerShell
 
-From the repository root:
+Run these commands from the repository root:
 
 ```powershell
 python -m venv venv
@@ -71,42 +61,41 @@ python -m venv venv
 python -m pip install -r requirements.txt
 ```
 
-If the root `venv` already exists, activate it rather than recreating it.
+If the root `venv` already exists, activate it instead of recreating it.
 
-### macOS/Linux
+Some applications have their own dependency files or additional server requirements. Install those only when working on the relevant project; their READMEs explain the commands. For example, the Complaint Assistant and REST API have project-level `requirements.txt` files.
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-python -m pip install -r requirements.txt
-```
-
-## API credentials and configuration
+## Environment variables and credentials
 
 1. Copy `.env.example` to `.env` in the repository root.
-2. Add the API keys required by the project you want to run.
-3. Keep the real `.env` file private; it is excluded from Git.
+2. Add the credentials required by the project you intend to run.
+3. Keep `.env`, OAuth tokens, and downloaded client secrets private.
 
-Environment variables used by projects in this repository include:
+Common variables include:
 
-- `OPENWEATHER_API_KEY`
-- `REST_COUNTRIES_API_KEY`
-- `GEMINI_API_KEY`
+- `GEMINI_API_KEY` — Google Gemini API access.
+- `GEMINI_MODEL` — model name for projects that read the model from the environment.
+- `OPENWEATHER_API_KEY` — OpenWeather API access.
+- `REST_COUNTRIES_API_KEY` — credential used by the REST Countries exercises.
 
-Some projects also require service-specific setup, such as Google Sheets API access and OAuth credentials. Follow the relevant project's README for those additional steps.
+Some integrations also require separate setup, such as Google Sheets API enablement and OAuth Desktop credentials. Follow the project README for those steps. Never commit real API keys, OAuth client secrets, or access tokens.
 
-Never commit API keys, OAuth client secrets, access tokens, or other credentials.
+## Dependencies
 
-## Managing dependencies
+The root `requirements.txt` contains shared Python libraries used by several projects. Some applications also have project-specific dependencies. Activate the shared environment before installing them, and use the relevant project's requirements file where one exists.
 
-The root `requirements.txt` is the shared dependency list.
+## Working with the projects
 
-When a project needs an additional external package, install it in the activated shared environment and add it to the root requirements file. Python standard-library modules such as `os`, `json`, `math`, and `pathlib` do not need to be installed separately.
+- Read the README inside a project folder before running it.
+- Run commands from the working directory specified in that README.
+- Check whether the project requires API credentials or external service setup.
+- Treat sample records and hard-coded business information as demonstration data.
+- Do not use prototype applications to make real financial, medical, legal, or operational decisions without appropriate validation and safeguards.
 
-## Learning progress
+## Project status
 
-- [x] Week 1 — APIs and external data
-- [ ] Week 2 — Not yet added
-- [x] Week 3 — Gemini API and AI assistant prototypes
+This repository is continuously evolving. Some folders contain completed learning exercises, while others contain prototypes under active development. Individual READMEs describe implemented behaviour and known limitations; planned features should not be assumed to be available.
 
-This repository is a work in progress. Project descriptions reflect the current state of each implementation; prototypes may have limitations documented in their individual READMEs.
+## Author
+
+Gerald Ouma

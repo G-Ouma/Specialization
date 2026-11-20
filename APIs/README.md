@@ -1,30 +1,37 @@
-# Week 1 — APIs
+# API Projects
 
-## Overview
+This folder contains four introductory exercises focused on consuming external APIs from Python and browser JavaScript.
 
-This week focuses on making requests to external APIs, reading JSON responses, handling API credentials, and using API data in both Python and a browser.
+## Projects
 
-## Mini-projects
-
-| Mini-project | Focus |
+| Project | Description |
 |---|---|
-| [01 - API Basics](01%20-%20API%20Basics/README.md) | Making a basic REST Countries request and inspecting the response |
-| [02 - Weather API](02%20-%20Weather%20API/README.md) | Retrieving current weather from OpenWeather |
-| [03 - Travel Information API](03%20-%20Travel%20Information%20API/README.md) | Combining weather and country information and saving search history |
-| [04 - Browser Country Lookup](04%20-%20Browser%20Country%20Lookup/README.md) | Calling a country API from a browser using JavaScript fetch |
+| [01 - API Basics](01%20-%20API%20Basics/README.md) | Send REST Countries requests and inspect country data |
+| [02 - Weather API](02%20-%20Weather%20API/README.md) | Retrieve current weather from OpenWeather |
+| [03 - Travel Information API](03%20-%20Travel%20Information%20API/README.md) | Combine weather and country information and save a local search history |
+| [04 - Browser Country Lookup](04%20-%20Browser%20Country%20Lookup/README.md) | Search for country information from a browser using JavaScript `fetch()` |
 
-## Shared setup
+## Shared Python setup
 
-All projects use the virtual environment and dependency file at the repository root. Follow the setup instructions in the [main repository README](../README.md).
+The Python exercises use the shared virtual environment and root dependency file. From the repository root, activate `venv` and install dependencies as described in the [main README](../README.md).
 
-API keys belong in the root `.env` file, not in individual project folders.
+Create a root `.env` file from `.env.example` and add the API keys required by each script:
 
-## Concepts covered
+```env
+OPENWEATHER_API_KEY=your_openweather_api_key
+REST_COUNTRIES_API_KEY=your_rest_countries_api_key
+```
 
-- HTTP GET requests and status codes
-- REST API endpoints and response structures
-- JSON parsing
-- Environment variables and API keys
-- Error handling and request timeouts
-- Saving structured data locally
-- Calling an API from browser JavaScript
+Do not commit real credentials. The browser exercise uses a demonstration authorization value in its HTML; never place a private API key in client-side code.
+
+## Skills practised
+
+- HTTP GET requests, query parameters, and request headers
+- HTTP status codes, timeouts, and error handling
+- JSON parsing and nested response fields
+- Environment variables and API credentials
+- Combining data from more than one API
+- Writing structured JSON history files
+- Browser-side requests with `fetch()` and `async/await`
+
+See each project README for its exact run command and current implementation details.

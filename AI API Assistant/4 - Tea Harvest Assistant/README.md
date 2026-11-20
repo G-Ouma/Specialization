@@ -1,148 +1,71 @@
-# Tea Harvest Assistant 🌱
+# Tea Harvest Assistant
 
-An AI-powered assistant designed to help tea estate staff make informed harvesting decisions using weather information and Google's Gemini API.
+## Overview
 
-The project combines live weather data from OpenWeatherMap and Open-Meteo with Gemini's function-calling capabilities to provide practical tea harvesting recommendations.
+A Python command-line assistant for exploring weather-informed tea-harvesting guidance. It combines Google's Gemini API with weather data from OpenWeather and Open-Meteo for a configured location in Kericho, Kenya.
 
-## 1. Project Overview
+The user asks a natural-language question. Gemini can call the Python `get_weather()` function when live weather is relevant, then use the returned information to explain whether conditions appear suitable for harvesting.
 
-The assistant accepts natural-language questions and determines whether live weather information is needed.
+## Current implementation
 
-When weather information is relevant, Gemini can call a Python weather function that retrieves current conditions and the next six hours of forecasts for Kericho, Kenya.
+- Location is fixed to Kericho coordinates: latitude `-0.3676`, longitude `35.2831`.
+- OpenWeather supplies current temperature, humidity, conditions, and an active-rain indicator.
+- Open-Meteo supplies hourly temperature, humidity, precipitation, and rain forecast data for the next six hours.
+- Gemini function calling decides when to request weather data.
+- General questions and greetings can be answered without a weather request.
 
-The assistant then interprets the information and provides a recommendation in simple language.
+## Harvesting guidance in the prompt
 
-## 2. Technologies Used
-
-- **Python** – Main programming language.
-- **Google Gemini API** – Natural-language understanding and AI responses.
-- **Gemini Function Calling** – Allows the model to request external weather information.
-- **OpenWeatherMap API** – Retrieves current weather conditions.
-- **Open-Meteo API** – Provides hourly weather forecasts.
-- **Requests** – Makes HTTP requests to the weather APIs.
-- **python-dotenv** – Loads API keys from environment variables.
-
-## 3. How It Works
-
-1. The user submits a question.
-2. Gemini interprets the question.
-3. Gemini decides whether live weather information is required.
-4. If required, Gemini calls the Python `get_weather()` function.
-5. The function retrieves current weather and the next six hours of forecasts.
-6. Gemini interprets the returned information and generates a practical response.
-
-For general questions and greetings, the assistant can respond without retrieving weather information.
-
-## 4. Weather Decision Rules
-
-The current harvesting guidelines used in the system instruction are:
-
-| Condition | Guideline |
+| Condition | Current guideline |
 |---|---|
 | Temperature | Preferred range: 15–25°C |
-| Humidity | Below 70% is preferred |
-| Rain | No rain expected over the next six hours |
-| Active rain | Unfavourable for harvesting |
-| Temperature above 28°C | Unfavourable for harvesting |
+| Humidity | Below 70% preferred |
+| Rain | No rain forecast in the next six hours |
+| Active rain | Unfavourable |
+| Temperature above 28°C | Unfavourable |
+| Temperature below 15°C or above 25°C | Requires caution and explanation |
 
-**Note:** The 70% humidity threshold is an initial operational assumption, not a universal tea harvesting standard. These guidelines will need validation against actual tea estate practices.
+These thresholds are initial operational assumptions, not universal tea-harvesting standards. Validate them with estate management and agronomic guidance before operational use.
 
-## 5. Current Project Features
+## Technology
 
-- Natural-language interaction with Gemini.
-- Automatic weather function calling.
-- Current weather retrieval.
-- Six-hour hourly weather forecasting.
-- Combined weather data from two APIs.
-- Plain-language harvesting recommendations.
-- Direct responses to general questions and greetings.
+- Python
+- Google Gemini API and function calling
+- OpenWeather API
+- Open-Meteo forecast API
+- `requests`
+- `python-dotenv`
 
-## 6. Installation and Setup
+## Setup
 
-### Prerequisites
-
-- Python 3.10 or later.
-- A Google Gemini API key.
-- An OpenWeatherMap API key.
-
-### Install dependencies
-
-```bash
-pip install google-genai requests python-dotenv
-```
-
-### Environment variables
-
-Create a `.env` file in the project directory:
+Use the shared environment and root dependency file described in the [main repository README](../../../README.md). Add the following to the repository-root `.env`:
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key
-OPENWEATHER_API_KEY=your_openweathermap_api_key
 GEMINI_MODEL=gemini-3.5-flash-lite
+OPENWEATHER_API_KEY=your_openweather_api_key
 ```
 
-Never commit your `.env` file or expose your API keys.
+The script reads the model from `GEMINI_MODEL`, defaulting to `gemini-3.5-flash-lite`. Open-Meteo does not require an API key for this request.
 
-### Run the assistant
+## Run
 
-```bash
+From this project folder, with the shared environment activated:
+
+```powershell
 python main.py
 ```
 
-Type `exit` to close the application.
+Ask whether current weather is suitable for harvesting or ask a general question. Enter `exit` to close the program.
 
-## 7. Initial Testing
+## Current limitations
 
-The assistant has been tested with the following questions:
+- Only the configured Kericho location is supported.
+- Each question is sent as a separate Gemini generation request; the script does not maintain a multi-turn chat session.
+- Weather data availability depends on the external services and network connection.
+- Recommendations are based on simplified thresholds and should not be treated as authoritative field instructions.
+- The current implementation returns errors from the weather function and Gemini request as text; further validation and user-friendly handling can be added.
 
-| User question | Expected behaviour | Result |
-|---|---|---|
-| Is today suitable for harvesting tea? | Retrieve weather and provide a recommendation | Passed |
-| What does humidity mean? | Explain without retrieving live weather | Passed |
-| Good morning | Respond without retrieving live weather | Passed |
+## Learning objectives
 
-The initial tests demonstrate that Gemini can respond to general questions and use the weather function when weather information is relevant.
-
-## 8. Areas for Improvement
-
-The project is still under development.
-
-### A. Conversation management
-- Replace direct `generate_content()` usage with `client.chats.create()` and `chat.send_message()`.
-- Maintain conversation context between messages.
-- Improve multi-turn interactions.
-
-### B. Function calling visibility
-- Add logging to show when Gemini requests the weather function.
-- Display when the weather API is being accessed.
-- Handle failed function calls more gracefully.
-
-### C. Weather data and decision-making
-- Improve rain detection using both current weather conditions and forecast data.
-- Handle missing or incomplete weather forecasts.
-- Validate harvesting thresholds with actual tea estate operating practices.
-- Consider additional factors that influence plucking and field operations.
-
-### D. Error handling
-- Improve handling of Gemini API failures and rate limits.
-- Handle weather API timeouts and unavailable services.
-- Provide clearer feedback when live weather data cannot be retrieved.
-
-### E. Future development
-- Allow users to select different tea estate locations.
-- Add a simple web interface.
-- Store weather observations and harvesting recommendations.
-- Introduce historical weather analysis.
-- Explore predictive models for harvesting conditions.
-
-## 9. Current Development Status
-
-**Working prototype.**
-
-The weather retrieval function and initial Gemini integration are operational. Initial conversational tests have passed.
-
-The next development milestone is improving conversation management and adding function-calling logs.
-
----
-
-*This project is being developed as a practical exploration of AI agents, Python API integration, and tool/function calling.*
+This project explores Gemini function calling, Python API integration, combining current and forecast weather data, and translating external data into cautious natural-language guidance.
