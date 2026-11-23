@@ -7,3 +7,4 @@ google-auth-oauthlib
 sqlalchemy
 psycopg[binary]
 pytest
+pypdf

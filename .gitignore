@@ -19,3 +19,6 @@ travel_history.json
 .coverage
 htmlcov//NOTES.docx
 /~$NOTES.docx
+
+# PDF Q&A generated cache
+Automation and Productivity/PDF Q&A/cache/
