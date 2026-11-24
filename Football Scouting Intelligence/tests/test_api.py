@@ -138,18 +138,12 @@ def test_player_leaderboard_with_assists():
 
 
 def test_leaderboard_rejects_invalid_statistic():
-    response = client.get(
-        "/players/leaderboard",
-        params={"statistic": "yellow_cards"}
-    )
+    response = client.get("/players/leaderboard", params={"statistic": "yellow_cards"})
 
     assert response.status_code == 400
 
 
 def test_leaderboard_rejects_zero_limit():
-    response = client.get(
-        "/players/leaderboard",
-        params={"limit": 0}
-    )
+    response = client.get("/players/leaderboard", params={"limit": 0})
 
-    assert response.status_code == 400
+    assert response.status_code == 422

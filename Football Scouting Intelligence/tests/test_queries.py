@@ -1,10 +1,7 @@
 import pytest
-from app.queries import (
-    search_players,
-    compare_players,
-    get_player_leaderboard
-)
+from app.queries import search_players, compare_players, get_player_leaderboard
 from app.database import TestSessionLocal
+from app.models import Player, PlayerStatistics, Season
 
 
 def test_search_player_by_name():
@@ -56,6 +53,66 @@ def test_compare_two_players():
     assert len(results) == 2
     assert results[0][0].name == "Rashid Moyo"
     assert results[1][0].name == "George Kamau"
+    assert isinstance(results[0][1], dict)
+    assert results[0][1]["goals"] == 15
+    assert results[1][1]["goals"] == 7
+
+def test_compare_single_competition_and_season():
+    results = compare_players(
+        "Rashid",
+        "George",
+        mode="single",
+        competition="Test League",
+        season="2025-26",
+        session_factory=TestSessionLocal
+    )
+
+    assert len(results) == 2
+    assert results[0][1]["goals"] == 15
+    assert results[1][1]["goals"] == 7
+
+def test_single_comparison_requires_competition_and_season():
+    with pytest.raises(ValueError, match="requires both competition and season"):
+        compare_players("Rashid", "George", mode="single", competition="Test League", session_factory=TestSessionLocal)
+
+
+def test_compare_invalid_mode():
+    with pytest.raises(ValueError, match="Invalid comparison mode"):
+        compare_players("Rashid", "George", mode="invalid", session_factory=TestSessionLocal)
+
+
+def test_compare_combined_with_competition_and_season():
+    results = compare_players("Rashid", "George", mode="combined", competition="Test League", season="2025-26", session_factory=TestSessionLocal)
+
+    assert results[0][1]["goals"] == 15
+    assert results[1][1]["goals"] == 7
+
+
+def test_compare_combined_with_team_filter():
+    results = compare_players("Rashid", "George", mode="combined", team="Test FC", session_factory=TestSessionLocal)
+
+    assert results[0][1]["goals"] == 15
+    assert results[1][1]["goals"] == 7
+
+def test_compare_aggregates_multiple_season_records():
+    with TestSessionLocal() as session:
+        original = session.query(PlayerStatistics).join(Player).filter(Player.name=='Rashid Moyo').first()
+
+        new_season = Season(name="2024-25")
+        session.add(new_season)
+        session.flush()
+
+        values = {column.name: getattr(original, column.name) for column in PlayerStatistics.__table__.columns if column.name != "id"}
+        values["season_id"] = new_season.id
+        values["goals"] = 5
+
+        session.add(PlayerStatistics(**values))
+        session.commit()
+
+    results = compare_players("Rashid", "George", mode="combined", session_factory=TestSessionLocal)
+
+    assert results[0][1]["goals"] == 20
+    assert results[1][1]["goals"] == 7
 
 def test_compare_with_unknown_player():
     with pytest.raises(ValueError, match="No player found"):

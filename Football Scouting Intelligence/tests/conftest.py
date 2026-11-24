@@ -2,13 +2,7 @@
 import pytest
 
 from app.database import TestSessionLocal, create_test_tables
-from app.models import (
-    Player,
-    PlayerStatistics,
-    Team,
-    Competition,
-    Season
-)
+from app.models import Player, PlayerStatistics, Team, Competition, Season
 
 
 @pytest.fixture(autouse=True)

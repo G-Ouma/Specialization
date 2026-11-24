@@ -79,44 +79,130 @@ def get_dashboard_stats(session_factory=SessionLocal):
         }
 
 
-def compare_players(player_name_1, player_name_2, session_factory=SessionLocal):
+def find_player(session, player_name):
+    matches = session.query(Player).filter(Player.name.ilike(f"%{player_name}%")).all()
+
+    if not matches:
+        raise ValueError(f"No player found matching '{player_name}'")
+
+    if len(matches) > 1:
+        raise ValueError(f"Multiple players match '{player_name}'. Please provide a more specific name.")
+
+    return matches[0]
+
+
+def get_player_statistics(session, player_id, competition=None, season=None, team=None):
+    query = (
+        session.query(PlayerStatistics)
+        .filter(PlayerStatistics.player_id == player_id)
+    )
+
+    if competition:
+        query = query.join(Competition).filter(Competition.name.ilike(competition))
+
+    if season:
+        query = query.join(Season).filter(Season.name.ilike(season))
+
+    if team:
+        query = query.join(Team).filter(Team.name.ilike(team))
+
+    return query.all()
+
+
+def aggregate_player_statistics(records):
+    excluded_fields = {"id", "player_id", "team_id", "competition_id", "season_id", "pass_accuracy", "tackle_success_rate", "cross_accuracy", "aerial_duels_success_rate", "estimated_90s"}
+
+    statistics = {}
+
+    for column in PlayerStatistics.__table__.columns:
+        field = column.name
+
+        if field in excluded_fields or field.endswith("_per_90"):
+            continue
+
+        values = [getattr(record, field) for record in records if getattr(record, field) is not None]
+        statistics[field] = sum(values) if values else None
+
+    # Recalculate percentage metrics using combined totals
+    percentage_fields = {
+        "pass_accuracy": ("passes_complete", "passes_incomplete", "sum"),
+        "tackle_success_rate": ("tackles_won", "total_tackles", "direct"),
+        "cross_accuracy": ("crosses_complete", "crosses_attempted", "direct"),
+        "aerial_duels_success_rate": ("aerial_duels_won", "aerial_duels_total", "direct")
+    }
+
+    for field, (numerator, denominator, method) in percentage_fields.items():
+        first_value = statistics.get(numerator)
+        second_value = statistics.get(denominator)
+
+        if first_value is None or second_value is None:
+            statistics[field] = None
+        else:
+            total = first_value + second_value if method == "sum" else second_value
+            statistics[field] = round(first_value / total * 100, 2) if total else None
+
+    # Recalculate per-90 metrics using combined minutes
+    per_90_fields = {
+        "passes_complete_per_90": "passes_complete",
+        "passes_incomplete_per_90": "passes_incomplete",
+        "goals_per_90": "goals",
+        "assists_per_90": "assists",
+        "shots_per_90": "shots",
+        "fouls_committed_per_90": "fouls_committed",
+        "tackles_won_per_90": "tackles_won",
+        "tackles_lost_per_90": "tackles_lost",
+        "interceptions_per_90": "interceptions",
+        "crosses_attempted_per_90": "crosses_attempted",
+        "crosses_complete_per_90": "crosses_complete",
+        "ball_won_opponent_per_90": "ball_won_opponent_half",
+        "ball_won_own_per_90": "ball_won_own_half",
+        "ball_lost_own_per_90": "ball_lost_own_half",
+        "ball_lost_opponent_per_90": "ball_lost_opponent_half",
+        "dribbles_per_90": "dribbles",
+        "box_carries_per_90": "box_carries",
+        "box_touches_per_90": "box_touches",
+        "progressive_passes_complete_per_90": "progressive_passes_complete",
+        "progressive_passes_incomplete_per_90": "progressive_passes_incomplete"
+    }
+
+    minutes = statistics.get("estimated_minutes")
+
+    for field, total_field in per_90_fields.items():
+        total = statistics.get(total_field)
+        statistics[field] = round(total / minutes * 90, 2) if total is not None and minutes else None
+
+    statistics["estimated_90s"] = round(minutes / 90, 2) if minutes else None
+
+    return statistics
+
+
+def compare_players(player_name_1, player_name_2, mode="combined", competition=None, season=None, team=None, session_factory=SessionLocal):
+    if mode not in ("single", "combined"):
+        raise ValueError("Invalid comparison mode. Choose 'single' or 'combined'.")
+
+    if mode == "single" and (not competition or not season):
+        raise ValueError("Single comparison mode requires both competition and season.")
+
     with session_factory() as session:
+        player_1 = find_player(session, player_name_1)
+        player_2 = find_player(session, player_name_2)
 
-        # Find the first player
-        player_1 = (
-            session.query(Player, PlayerStatistics)
-            .join(PlayerStatistics)
-            .filter(Player.name.ilike(f"%{player_name_1}%"))
-            .all()
-        )
-
-        # Find the second player
-        player_2 = (
-            session.query(Player, PlayerStatistics)
-            .join(PlayerStatistics)
-            .filter(Player.name.ilike(f"%{player_name_2}%"))
-            .all()
-        )
-
-        # Validate the first player
-        if len(player_1) == 0:
-            raise ValueError(f"No player found matching '{player_name_1}'")
-
-        if len(player_1) > 1:
-            raise ValueError(f"Multiple players match '{player_name_1}'. Please provide a more specific name.")
-
-        # Validate the second player
-        if len(player_2) == 0:
-            raise ValueError(f"No player found matching '{player_name_2}'")
-
-        if len(player_2) > 1:
-            raise ValueError(f"Multiple players match '{player_name_2}'. Please provide a more specific name.")
-
-        # Prevent comparing a player against themselves
-        if player_1[0][0].id == player_2[0][0].id:
+        if player_1.id == player_2.id:
             raise ValueError("Please select two different players.")
 
-        return [player_1[0], player_2[0]]
+        statistics_1 = get_player_statistics(session, player_1.id, competition, season, team)
+        statistics_2 = get_player_statistics(session, player_2.id, competition, season, team)
+
+        if not statistics_1:
+            raise ValueError(f"No statistics found for {player_1.name} with the selected filters.")
+
+        if not statistics_2:
+            raise ValueError(f"No statistics found for {player_2.name} with the selected filters.")
+
+        return [
+            (player_1, aggregate_player_statistics(statistics_1)),
+            (player_2, aggregate_player_statistics(statistics_2))
+        ]
 
 
 

@@ -3,13 +3,7 @@ from pathlib import Path
 import pandas as pd
 
 from app.database import SessionLocal
-from app.models import (
-    Player,
-    Team,
-    Competition,
-    Season,
-    PlayerStatistics,
-)
+from app.models import Player, Team, Competition, Season, PlayerStatistics
 
 COLUMN_MAPPING = {
     "Passes Complete": "passes_complete",
@@ -89,12 +83,78 @@ INTEGER_FIELDS = {
     "aerial_duels_won", "aerial_duels_total",
 }
 
+PERCENTAGE_FIELDS = {
+    "pass_accuracy",
+    "tackle_success_rate",
+    "cross_accuracy",
+    "aerial_duels_success_rate",
+}
+
+NON_NEGATIVE_FIELDS = INTEGER_FIELDS | {
+    "pass_accuracy", "tackle_success_rate", "cross_accuracy",
+    "aerial_duels_success_rate",
+    "tackles_won_per_90", "tackles_lost_per_90",
+    "interceptions_per_90", "crosses_attempted_per_90",
+    "crosses_complete_per_90", "passes_complete_per_90",
+    "passes_incomplete_per_90", "goals_per_90", "assists_per_90",
+    "shots_per_90", "fouls_committed_per_90",
+    "ball_won_opponent_per_90", "ball_won_own_per_90",
+    "ball_lost_own_per_90", "ball_lost_opponent_per_90",
+    "dribbles_per_90", "box_carries_per_90", "box_touches_per_90",
+    "progressive_passes_complete_per_90",
+    "progressive_passes_incomplete_per_90",
+    "estimated_minutes", "estimated_90s",
+}
+
+
+
+def validate_player_statistics(stats_data, player_name):
+    errors = []
+
+    for field in NON_NEGATIVE_FIELDS - PERCENTAGE_FIELDS:
+        value = stats_data.get(field)
+
+        if value is not None and value < 0:
+            errors.append(f"{field} cannot be negative: {value}")
+
+    for field in PERCENTAGE_FIELDS:
+        value = stats_data.get(field)
+
+        if value is not None and not 0 <= value <= 100:
+            errors.append(f"{field} must be between 0 and 100: {value}")
+
+    if stats_data.get("crosses_complete") is not None and stats_data.get("crosses_attempted") is not None and stats_data["crosses_complete"] > stats_data["crosses_attempted"]:
+        errors.append("Crosses complete cannot exceed crosses attempted")
+
+    if stats_data.get("aerial_duels_won") is not None and stats_data.get("aerial_duels_total") is not None and stats_data["aerial_duels_won"] > stats_data["aerial_duels_total"]:
+        errors.append("Aerial duels won cannot exceed total aerial duels")
+
+    if stats_data.get("estimated_starts") is not None and stats_data.get("matches") is not None and stats_data["estimated_starts"] > stats_data["matches"]:
+        errors.append("Estimated starts cannot exceed matches")
+
+    if stats_data.get("estimated_sub_apps") is not None and stats_data.get("matches") is not None and stats_data["estimated_sub_apps"] > stats_data["matches"]:
+        errors.append("Estimated substitute appearances cannot exceed matches")
+
+    if errors:
+        print(f"\nValidation errors for {player_name}:")
+        for error in errors:
+            print(f" - {error}")
+
+    return errors
+
+
+
 def convert_value(field, value):
     if pd.isna(value):
         return None
 
     if field in INTEGER_FIELDS:
-        return int(value)
+        numeric_value = float(value)
+
+        if not numeric_value.is_integer():
+            raise ValueError(f"{field} must be a whole number: {value}")
+
+        return int(numeric_value)
 
     return float(value)
 
@@ -104,53 +164,55 @@ def import_player_statistics():
     project_dir = Path(__file__).resolve().parent.parent
 
     # Load the cleaned player dataset
-    data_file = (
-        project_dir / "data" / "processed" / "players_cleaned.csv"
-    )
+    data_file = (project_dir / "data" / "processed" / "nsl_2025_26_players_cleaned.csv")
 
     df = pd.read_csv(data_file)
+
+    valid_records = 0
+    invalid_records = 0
 
     print("\nPlayer dataset loaded successfully!")
 
     # Import player statistics within a database transaction
     with SessionLocal.begin() as session:
 
-        team = session.query(Team).filter_by(
-            name="Equity FC"
-        ).one()
+        competition = session.query(Competition).filter_by(name="National Super League").one()
 
-        competition = session.query(Competition).filter_by(
-            name="National Super League"
-        ).one()
-
-        season = session.query(Season).filter_by(
-            name="2025-26"
-        ).one()
+        season = session.query(Season).filter_by(name="2025-26").one()
 
         for _, row in df.iterrows():
 
-            player = session.query(Player).filter_by(
-                name=row["Player"]
-            ).one()
+            team_name = row["Team"]
+            team = session.query(Team).filter_by(name=team_name).first()
+
+            if team is None:
+                team = Team(name=team_name)
+                session.add(team)
+                session.flush()
+
+            player = session.query(Player).filter_by(name=row["Player"]).first()
+
+            if player is None:
+                player = Player(name=row["Player"], position=row["Position"])
+                session.add(player)
+                session.flush()
+            else:
+                player.position = row["Position"]
 
             # Convert the player's statistics
-            stats_data = {
-                database_field: convert_value(
-                    database_field, row[csv_column]
-                )
-                for csv_column, database_field
-                in COLUMN_MAPPING.items()
-            }
+            stats_data = {database_field: convert_value(database_field, row[csv_column]) 
+                for csv_column, database_field in COLUMN_MAPPING.items()}
+
+            validation_errors = validate_player_statistics(stats_data, row["Player"])
+
+            if validation_errors:
+                invalid_records += 1
+                continue
+
+            valid_records += 1
 
             # Check whether statistics already exist
-            statistics = session.query(
-                PlayerStatistics
-            ).filter_by(
-                player_id=player.id,
-                team_id=team.id,
-                competition_id=competition.id,
-                season_id=season.id
-            ).first()
+            statistics = session.query(PlayerStatistics).filter_by(player_id=player.id, team_id=team.id, competition_id=competition.id, season_id=season.id).first()
 
             if statistics:
                 # Update existing statistics
@@ -159,13 +221,7 @@ def import_player_statistics():
 
             else:
                 # Create a new statistics record
-                statistics = PlayerStatistics(
-                    player_id=player.id,
-                    team_id=team.id,
-                    competition_id=competition.id,
-                    season_id=season.id,
-                    **stats_data
-                )
+                statistics = PlayerStatistics(player_id=player.id, team_id=team.id, competition_id=competition.id, season_id=season.id, **stats_data)
 
                 session.add(statistics)
 
@@ -173,10 +229,11 @@ def import_player_statistics():
 
     # Verify the total number of records
     with SessionLocal() as session:
-        total_records = session.query(
-            PlayerStatistics
-        ).count()
+        total_records = session.query(PlayerStatistics).count()
 
+    print(f"\nValidation summary:")
+    print(f"Valid records: {valid_records}")
+    print(f"Invalid records skipped: {invalid_records}")
     print("Total statistics records:", total_records)
 
 
