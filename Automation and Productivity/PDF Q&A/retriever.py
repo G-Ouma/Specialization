@@ -1,3 +1,5 @@
+import time
+import re
 import os
 import hashlib
 import json
@@ -51,61 +53,83 @@ def calculate_file_hash(pdf_path):
 
 
 # --------------------------------------------------
-# Generate document embeddings
-# --------------------------------------------------
-
-def create_embedding_index(chunks, batch_size=32):
-    """Generate embeddings for PDF chunks in batches."""
-
-    if not chunks:
-        return np.array([], dtype=np.float32)
-
-    texts = [chunk["text"] for chunk in chunks]
-    embeddings = []
-
-    for start in range(0, len(texts), batch_size):
-        batch = texts[start:start + batch_size]
-
-        response = client.models.embed_content(
-            model=EMBEDDING_MODEL,
-            contents=batch,
-            config=types.EmbedContentConfig(
-                task_type="RETRIEVAL_DOCUMENT"
-            )
-        )
-
-        embeddings.extend([
-            item.values for item in response.embeddings
-        ])
-
-    if len(embeddings) != len(chunks):
-        raise ValueError(
-            "Some document embeddings were not generated."
-        )
-
-    return np.array(embeddings, dtype=np.float32)
-
-
-# --------------------------------------------------
 # Load existing cache or create a new one
 # --------------------------------------------------
+
+def generate_embeddings_with_retry(batch, task_type="RETRIEVAL_DOCUMENT", max_retries=5):
+    """Generate embeddings and retry when the API quota is exceeded."""
+
+    for attempt in range(max_retries + 1):
+        try:
+            response = client.models.embed_content(
+                model=EMBEDDING_MODEL,
+                contents=batch,
+                config=types.EmbedContentConfig(
+                    task_type=task_type
+                )
+            )
+
+            return np.array(
+                [item.values for item in response.embeddings],
+                dtype=np.float32
+            )
+
+        except Exception as error:
+            error_message = str(error)
+
+            if "429" not in error_message and "RESOURCE_EXHAUSTED" not in error_message:
+                raise
+
+            if attempt == max_retries:
+                raise
+
+            retry_match = re.search(
+                r"retry in\s+([0-9.]+)s",
+                error_message,
+                re.IGNORECASE
+            )
+
+            wait_time = float(retry_match.group(1)) + 2 if retry_match else 30 * (attempt + 1)
+
+            print(
+                f"Gemini quota reached. Waiting {wait_time:.1f} seconds "
+                f"before retry ({attempt + 1}/{max_retries})..."
+            )
+
+            time.sleep(wait_time)
+
+
+def save_embedding_cache(cache_path, embeddings, completed, metadata_string):
+    """Save embedding progress safely to a local cache file."""
+
+    temporary_path = cache_path.with_suffix(".tmp.npz")
+
+    with open(temporary_path, "wb") as cache_file:
+        np.savez_compressed(
+            cache_file,
+            embeddings=embeddings,
+            completed=completed,
+            metadata=np.array(metadata_string)
+        )
+
+    temporary_path.replace(cache_path)
+
 
 def get_or_create_embedding_index(
     pdf_path,
     chunks,
     chunk_size=1000,
     overlap=200,
-    batch_size=32
+    batch_size=16
 ):
     """
-    Load cached embeddings if available.
-    Otherwise, generate and save new embeddings.
+    Load completed embeddings or resume generating them.
+    Save each successful batch to a local checkpoint.
     """
 
     if not chunks:
         raise ValueError("No document chunks were provided.")
 
-    # Identify the exact PDF and processing configuration
     metadata = {
         "pdf_sha256": calculate_file_hash(pdf_path),
         "embedding_model": EMBEDDING_MODEL,
@@ -116,30 +140,22 @@ def get_or_create_embedding_index(
         "embedding_task_type": "RETRIEVAL_DOCUMENT"
     }
 
-    # Generate a unique cache filename
-    metadata_string = json.dumps(
-        metadata,
-        sort_keys=True
-    )
+    metadata_string = json.dumps(metadata, sort_keys=True)
 
     cache_key = hashlib.sha256(
         metadata_string.encode("utf-8")
     ).hexdigest()
 
     cache_path = CACHE_DIR / f"{cache_key}.npz"
+    partial_path = CACHE_DIR / f"{cache_key}.partial.npz"
 
-    # Create the cache folder automatically
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Check whether a valid cache already exists
+    # Check for a completed cache first
     if cache_path.is_file():
-
         try:
             with np.load(cache_path, allow_pickle=False) as cache:
-                saved_metadata = json.loads(
-                    str(cache["metadata"].item())
-                )
-
+                saved_metadata = json.loads(cache["metadata"].item())
                 embeddings = cache["embeddings"]
 
             if (
@@ -153,29 +169,101 @@ def get_or_create_embedding_index(
                 return embeddings.astype(np.float32, copy=False), True
 
         except Exception:
-            # If the cache is damaged or invalid, regenerate it
             print("Existing cache is invalid. Rebuilding it.")
 
-    # No valid cache found: generate embeddings
-    print("Generating document embeddings...")
+    # Load an existing partial checkpoint if available
+    embeddings = None
+    completed = np.zeros(len(chunks), dtype=bool)
 
-    embeddings = create_embedding_index(
-        chunks,
-        batch_size=batch_size
-    )
+    if partial_path.is_file():
+        try:
+            with np.load(partial_path, allow_pickle=False) as cache:
+                saved_metadata = json.loads(cache["metadata"].item())
+                saved_embeddings = cache["embeddings"]
+                saved_completed = cache["completed"]
 
-    # Save embeddings and metadata in compressed format
-    temporary_path = cache_path.with_suffix(".tmp.npz")
+            if (
+                saved_metadata == metadata
+                and saved_embeddings.ndim == 2
+                and saved_embeddings.shape[0] == len(chunks)
+                and saved_embeddings.shape[1] > 0
+                and saved_completed.shape == (len(chunks),)
+                and np.isfinite(saved_embeddings[saved_completed]).all()
+            ):
+                embeddings = saved_embeddings.astype(np.float32, copy=True)
+                completed = saved_completed.astype(bool, copy=True)
 
-    with open(temporary_path, "wb") as cache_file:
-        np.savez_compressed(
-            cache_file,
-            embeddings=embeddings,
-            metadata=np.array(metadata_string)
+                print(
+                    f"Resuming from cache: "
+                    f"{completed.sum()} of {len(chunks)} chunks already embedded."
+                )
+
+        except Exception:
+            print("Existing partial cache is invalid. Starting again.")
+
+    # Generate only the embeddings that are still missing
+    for start in range(0, len(chunks), batch_size):
+        end = min(start + batch_size, len(chunks))
+
+        missing_indexes = [
+            index for index in range(start, end)
+            if not completed[index]
+        ]
+
+        if not missing_indexes:
+            continue
+
+        batch = [chunks[index]["text"] for index in missing_indexes]
+
+        print(
+            f"Embedding chunks {missing_indexes[0] + 1} "
+            f"to {missing_indexes[-1] + 1}..."
         )
 
-    # Replace the final cache file safely
-    temporary_path.replace(cache_path)
+        batch_embeddings = generate_embeddings_with_retry(batch)
+
+        if len(batch_embeddings) != len(missing_indexes):
+            raise ValueError("Some document embeddings were not generated.")
+
+        if embeddings is None:
+            embeddings = np.zeros(
+                (len(chunks), batch_embeddings.shape[1]),
+                dtype=np.float32
+            )
+
+        if batch_embeddings.shape[1] != embeddings.shape[1]:
+            raise ValueError("Embedding dimensions do not match.")
+
+        for index, embedding in zip(missing_indexes, batch_embeddings):
+            embeddings[index] = embedding
+
+        completed[missing_indexes] = True
+
+        # Save progress immediately after each successful batch
+        save_embedding_cache(
+            partial_path,
+            embeddings,
+            completed,
+            metadata_string
+        )
+
+        print(f"Saved progress: {completed.sum()} of {len(chunks)} chunks.")
+
+    # Confirm that every chunk has an embedding
+    if not completed.all():
+        raise ValueError("Not all document embeddings were generated.")
+
+    # Save the completed cache
+    save_embedding_cache(
+        cache_path,
+        embeddings,
+        completed,
+        metadata_string
+    )
+
+    # Remove the temporary checkpoint after successful completion
+    if partial_path.exists():
+        partial_path.unlink()
 
     print("Document embeddings saved to local cache.")
 
@@ -202,17 +290,9 @@ def retrieve_relevant_chunks(
             "Chunk and embedding counts do not match."
         )
 
-    response = client.models.embed_content(
-        model=EMBEDDING_MODEL,
-        contents=question,
-        config=types.EmbedContentConfig(
-            task_type="RETRIEVAL_QUERY"
-        )
-    )
-
-    question_embedding = np.array(
-        [response.embeddings[0].values],
-        dtype=np.float32
+    question_embedding = generate_embeddings_with_retry(
+        [question],
+        task_type="RETRIEVAL_QUERY"
     )
 
     similarities = cosine_similarity(
