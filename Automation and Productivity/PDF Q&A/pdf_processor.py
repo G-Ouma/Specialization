@@ -3,26 +3,23 @@ import re
 
 
 def extract_text(pdf_path):
-    """
-    Extract text from a PDF document page by page using PyMuPDF.
-    """
+    """Extract text from a PDF document page by page using PyMuPDF."""
 
-    pdf = pymupdf.open(pdf_path)
+    try:
+        with pymupdf.open(pdf_path) as pdf:
+            document = []
 
-    document = []
+            for page_number, page in enumerate(pdf, start=1):
+                text = page.get_text()
+                if text and text.strip():
+                    document.append({"page": page_number, "text": text.strip()})
 
-    for page_number, page in enumerate(pdf, start=1):
-        text = page.get_text()
+            return document
 
-        if text and text.strip():
-            document.append({
-                "page": page_number,
-                "text": text.strip()
-            })
-
-    pdf.close()
-
-    return document
+    except pymupdf.FileDataError:
+        raise ValueError("The selected file is not a valid or readable PDF.") from None
+    except Exception as error:
+        raise RuntimeError(f"Could not open or read the PDF: {error}") from error
 
 
 def create_chunks(pages, chunk_size=1000, overlap=200):

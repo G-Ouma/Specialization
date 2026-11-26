@@ -69,10 +69,7 @@ def generate_embeddings_with_retry(batch, task_type="RETRIEVAL_DOCUMENT", max_re
                 )
             )
 
-            return np.array(
-                [item.values for item in response.embeddings],
-                dtype=np.float32
-            )
+            return np.array([item.values for item in response.embeddings], dtype=np.float32)
 
         except Exception as error:
             error_message = str(error)
@@ -83,11 +80,7 @@ def generate_embeddings_with_retry(batch, task_type="RETRIEVAL_DOCUMENT", max_re
             if attempt == max_retries:
                 raise
 
-            retry_match = re.search(
-                r"retry in\s+([0-9.]+)s",
-                error_message,
-                re.IGNORECASE
-            )
+            retry_match = re.search(r"retry in\s+([0-9.]+)s", error_message, re.IGNORECASE)
 
             wait_time = float(retry_match.group(1)) + 2 if retry_match else 30 * (attempt + 1)
 
@@ -103,25 +96,25 @@ def save_embedding_cache(cache_path, embeddings, completed, metadata_string):
     """Save embedding progress safely to a local cache file."""
 
     temporary_path = cache_path.with_suffix(".tmp.npz")
-
     with open(temporary_path, "wb") as cache_file:
-        np.savez_compressed(
-            cache_file,
-            embeddings=embeddings,
-            completed=completed,
-            metadata=np.array(metadata_string)
-        )
-
+        np.savez_compressed(cache_file, embeddings=embeddings, completed=completed, metadata=np.array(metadata_string))
     temporary_path.replace(cache_path)
 
 
-def get_or_create_embedding_index(
-    pdf_path,
-    chunks,
-    chunk_size=1000,
-    overlap=200,
-    batch_size=16
-):
+def validate_embedding_matrix(embeddings, expected_rows):
+    """Check whether a saved embedding matrix is structurally valid."""
+
+    return (
+        isinstance(embeddings, np.ndarray)
+        and embeddings.ndim == 2
+        and embeddings.shape[0] == expected_rows
+        and embeddings.shape[1] > 0
+        and np.issubdtype(embeddings.dtype, np.floating)
+        and np.isfinite(embeddings).all()
+    )
+
+
+def get_or_create_embedding_index(pdf_path, chunks, chunk_size=1000, overlap=200, batch_size=16):
     """
     Load completed embeddings or resume generating them.
     Save each successful batch to a local checkpoint.
@@ -141,11 +134,7 @@ def get_or_create_embedding_index(
     }
 
     metadata_string = json.dumps(metadata, sort_keys=True)
-
-    cache_key = hashlib.sha256(
-        metadata_string.encode("utf-8")
-    ).hexdigest()
-
+    cache_key = hashlib.sha256(metadata_string.encode("utf-8")).hexdigest()
     cache_path = CACHE_DIR / f"{cache_key}.npz"
     partial_path = CACHE_DIR / f"{cache_key}.partial.npz"
 
@@ -158,13 +147,7 @@ def get_or_create_embedding_index(
                 saved_metadata = json.loads(cache["metadata"].item())
                 embeddings = cache["embeddings"]
 
-            if (
-                saved_metadata == metadata
-                and embeddings.ndim == 2
-                and embeddings.shape[0] == len(chunks)
-                and embeddings.shape[1] > 0
-                and np.isfinite(embeddings).all()
-            ):
+            if saved_metadata == metadata and validate_embedding_matrix(embeddings, len(chunks)):
                 print("Using saved document embeddings.")
                 return embeddings.astype(np.float32, copy=False), True
 

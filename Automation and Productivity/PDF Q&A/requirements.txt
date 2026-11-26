@@ -1,0 +1,5 @@
+pypdf
+pymupdf
+scikit-learn
+google-genai
+python-dotenv
